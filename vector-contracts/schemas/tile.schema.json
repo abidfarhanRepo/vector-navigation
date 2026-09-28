@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vector.dev/schemas/tile.schema.json",
+  "title": "Tile",
+  "description": "Vector tile metadata. Binary payload delivered out-of-band (MVT).",
+  "type": "object",
+  "required": ["z", "x", "y", "format"],
+  "additionalProperties": false,
+  "properties": {
+    "z": { "type": "integer", "minimum": 0, "maximum": 22 },
+    "x": { "type": "integer", "minimum": 0 },
+    "y": { "type": "integer", "minimum": 0 },
+    "format": { "type": "string", "enum": ["mvt", "pbf", "json"] },
+    "bytes": { "type": "integer", "minimum": 0 }
+  }
+}

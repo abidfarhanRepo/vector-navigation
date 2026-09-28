@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vector.dev/schemas/registry.json",
+  "title": "Vector Organization Registry",
+  "description": "Source of truth for repo->squad, service->repo, and dependency edges (Blueprint §11).",
+  "type": "object",
+  "required": ["version", "squads", "repos"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "squads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "name": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "repos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "owner_squad", "primary_lang", "purpose"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "owner_squad": { "type": "string" },
+          "secondary_squads": { "type": "array", "items": { "type": "string" } },
+          "primary_lang": { "type": "string" },
+          "purpose": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "owner_squad", "repo"],
+        "properties": {
+          "id": { "type": "string" },
+          "owner_squad": { "type": "string" },
+          "repo": { "type": "string" }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "type", "scope"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "type": { "type": "string" },
+          "scope": { "enum": ["build", "runtime", "test", "docs"] },
+          "note": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

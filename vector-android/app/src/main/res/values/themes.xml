@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Vector's window theme.
+
+  ## What this used to be
+
+  One style, parented on `android:Theme.Material.NoActionBar`, with a hard-coded
+  `#0c0e14` status bar, navigation bar and window background. That is the dark
+  chrome palette's ground colour, applied unconditionally — so a phone in light
+  mode, whose map and chrome both resolve light, still launched into a black
+  window and painted black system bars behind a light app. The palette was
+  designed to follow the theme; the window was not.
+
+  ## Light first, and why the parent changed
+
+  The brief makes the light theme the primary design target, so the default
+  parent is now the LIGHT Material theme and `values-night` carries the dark one.
+  The bars are transparent because the app draws edge to edge
+  (`WindowCompat.setDecorFitsSystemWindows(window, false)`) and composites its own
+  scrim over the map; a coloured bar would put a hard edge across the top of the
+  cartography and cost the driver a strip of it.
+
+  `windowBackground` is the design system's field colour rather than a platform
+  default, so the first frame the user sees is already Vector's — this is the
+  "no flash of unstyled UI" requirement, and it is why the colour lives in
+  `values/colors.xml` and `values-night/colors.xml` next to each other.
+-->
+<resources>
+
+    <style name="Theme.Vector" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/vector_field</item>
+        <item name="android:colorBackground">@color/vector_field</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!-- The window's own guess at bar polarity. MainActivity overrides this
+             per phase and per theme through `applySystemBarAppearance`, because
+             the maneuver band is dark in BOTH themes and the rule is about what
+             is under the icons, not about the theme. -->
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- Vector draws its own type; the platform must not add a fallback
+             face to a window that is already composed. -->
+    </style>
+
+    <!--
+      Launch.
+
+      A dedicated splash theme so the pre-Compose frames are Vector's mark on
+      Vector's field rather than a white or black flash. `postSplashScreenTheme`
+      hands over to `Theme.Vector`, and `MainActivity.installSplashScreen()`
+      keeps the splash up only until the first composition, so a cold start shows
+      the mark and then the app — never a bare window.
+
+      The icon is `ic_splash_mark`, which is original artwork drawn for this
+      identity. The platform masks it, so it keeps its ink inside the central
+      two-thirds.
+    -->
+    <style name="Theme.Vector.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/vector_field</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_mark</item>
+        <item name="postSplashScreenTheme">@style/Theme.Vector</item>
+    </style>
+</resources>

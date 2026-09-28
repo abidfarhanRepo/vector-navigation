@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vector.dev/schemas/bounding-box.schema.json",
+  "title": "BoundingBox",
+  "description": "Axis-aligned geographic bounding box.",
+  "type": "object",
+  "required": ["min_lat", "min_lon", "max_lat", "max_lon"],
+  "additionalProperties": false,
+  "properties": {
+    "min_lat": { "type": "number", "minimum": -90, "maximum": 90 },
+    "min_lon": { "type": "number", "minimum": -180, "maximum": 180 },
+    "max_lat": { "type": "number", "minimum": -90, "maximum": 90 },
+    "max_lon": { "type": "number", "minimum": -180, "maximum": 180 }
+  }
+}

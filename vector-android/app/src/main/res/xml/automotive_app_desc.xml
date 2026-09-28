@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Declares to Android Auto that Vector is a TEMPLATE app — that is, that it
+  drives the car screen through the Car App Library rather than through the
+  older media or messaging integrations. This one line is what makes the head
+  unit offer Vector at all; without it the CarAppService is never bound.
+-->
+<automotiveApp>
+    <uses name="template" />
+</automotiveApp>

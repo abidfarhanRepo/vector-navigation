@@ -1,0 +1,69 @@
+openapi: 3.0.3
+info:
+  title: Vector API
+  version: 0.1.0
+  description: >
+    Language-neutral API surface for Vector services. Shared types are defined in
+    vector-contracts (schemas/, dtos/, proto/) and error codes in errors/error-codes.json.
+    This is the M1 bootstrap surface; it grows as services are built.
+servers:
+  - url: https://api.vector.dev
+paths:
+  /health:
+    get:
+      summary: Liveness probe
+      operationId: getHealth
+      responses:
+        '200':
+          description: service healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+  /tiles/{z}/{x}/{y}:
+    get:
+      summary: Fetch a vector tile
+      operationId: getTile
+      parameters:
+        - name: z
+          in: path
+          required: true
+          schema: { type: integer, minimum: 0, maximum: 22 }
+        - name: x
+          in: path
+          required: true
+          schema: { type: integer, minimum: 0 }
+        - name: y
+          in: path
+          required: true
+          schema: { type: integer, minimum: 0 }
+      responses:
+        '200':
+          description: tile payload
+          content:
+            application/x-protobuf:
+              schema:
+                type: string
+                format: binary
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/Internal' }
+components:
+  responses:
+    BadRequest:
+      description: VEC-0001 invalid request
+      content:
+        application/json:
+          schema: { $ref: 'schemas/error.schema.json' }
+    NotFound:
+      description: VEC-0004 resource not found
+      content:
+        application/json:
+          schema: { $ref: 'schemas/error.schema.json' }
+    Internal:
+      description: VEC-0500 internal error
+      content:
+        application/json:
+          schema: { $ref: 'schemas/error.schema.json' }

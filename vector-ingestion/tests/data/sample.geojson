@@ -1,0 +1,118 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "poi-brandenburg-gate",
+      "properties": { "name": "Brandenburg Gate", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.3777, 52.5163] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-tv-tower",
+      "properties": { "name": "TV Tower", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.4094, 52.5208] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-charite",
+      "properties": { "name": "Charite", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [-240.0, 52.5265] }
+    },
+    {
+      "type": "Feature",
+      "id": "park-tiergarten",
+      "properties": { "name": "Tiergarten", "kind": "park" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3390, 52.5060],
+            [13.3510, 52.5300],
+            [13.3730, 52.5260],
+            [13.3500, 52.5040],
+            [13.3390, 52.5060]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-reichstag",
+      "properties": { "name": "Reichstag", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.3766, 52.5186] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-berlin-cathedral",
+      "properties": { "name": "Berlin Cathedral", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.3989, 52.5199] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-checkpoint-charlie",
+      "properties": { "name": "Checkpoint Charlie", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.3906, 52.5074] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-potsdamer-platz",
+      "properties": { "name": "Potsdamer Platz", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.3746, 52.5096] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-alexanderplatz",
+      "properties": { "name": "Alexanderplatz", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.4132, 52.5219] }
+    },
+    {
+      "type": "Feature",
+      "id": "park-treptower",
+      "properties": { "name": "Treptower Park", "kind": "park" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.4570, 52.4970],
+            [13.4710, 52.5010],
+            [13.4670, 52.4880],
+            [13.4530, 52.4930],
+            [13.4570, 52.4970]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "district-mitte",
+      "properties": { "name": "Mitte", "kind": "district" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3630, 52.5250],
+            [13.4160, 52.5270],
+            [13.4190, 52.5030],
+            [13.3640, 52.5010],
+            [13.3630, 52.5250]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route-stresemannstrasse",
+      "properties": { "name": "Stresemannstrasse", "kind": "route" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [13.3720, 52.5040],
+          [13.3800, 52.5060],
+          [13.3890, 52.5070],
+          [13.3980, 52.5060]
+        ]
+      }
+    }
+  ]
+}

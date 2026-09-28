@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vector_routing"
+version = "0.1.0"
+description = "Vector — vector-routing"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+vector-routing-health = "vector_routing.__main__:main"
+vector-routing-serve = "vector_routing.serve:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vector_routing"]
+

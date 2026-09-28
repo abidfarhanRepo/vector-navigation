@@ -1,0 +1,7 @@
+# CODEOWNERS — legal edit boundary (Bible §8 R1, Blueprint §5)
+# Format: <path> <owners>
+# Primary owner first, secondary owners after.
+
+* @vector/governance-team
+/docs/ @vector/docs-team @vector/architecture-team
+/adr/  @vector/architecture-team @vector/docs-team

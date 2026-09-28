@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package vector;
+
+// Shared geometry & tile contract types for Vector services.
+// Language-neutral; generated clients consume these. (ADR-0001, ADR-0003)
+
+message Coordinate {
+  double lat = 1; // WGS84 latitude, [-90, 90]
+  double lon = 2; // WGS84 longitude, [-180, 180]
+}
+
+message BoundingBox {
+  double min_lat = 1;
+  double min_lon = 2;
+  double max_lat = 3;
+  double max_lon = 4;
+}
+
+message TileRequest {
+  int32 z = 1;       // zoom level [0, 22]
+  int32 x = 2;       // tile column
+  int32 y = 3;       // tile row
+  string layer = 4;  // logical layer name
+}
+
+message Tile {
+  int32 z = 1;
+  int32 x = 2;
+  int32 y = 3;
+  string format = 4; // e.g. "mvt"
+  bytes data = 5;
+}
+
+message MapChangeProposal {
+  string id = 1;
+  string source = 2;     // "crowd" | "reconstruction"
+  double confidence = 3; // [0, 1]
+  bytes geometry = 4;    // encoded geometry
+}
+
+service TileService {
+  rpc GetTile(TileRequest) returns (Tile);
+}

@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+dist/
+build/
+node_modules/
+
+# Captured location data (adr-0065). The quarantine store and any raw trace
+# sink are 72h-TTL personal data — they must never enter version control.
+data/
+*.db
+*.db-wal
+*.db-shm
+traces.jsonl
+
+# TLS material — private keys must never enter version control.
+tls/
+*.pem
+*.key

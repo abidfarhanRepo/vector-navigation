@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Vector — Tile Server Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:," />
+  <!-- MapLibre GL JS is served by the web app's /vendor; the tile server
+       viewer itself only needs a style + tiles + glyphs from THIS server, so
+       it loads maplibre-gl from a CDN-free path. When embedded via vector-web
+       the same style is provided inline. -->
+  <style>
+    html, body { margin: 0; height: 100%; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    #hud { position: absolute; z-index: 1; left: 10px; top: 10px;
+           background: rgba(20,22,28,0.9); color: #e6e6e6; padding: 8px 12px;
+           border-radius: 6px; font: 13px/1.4 system-ui, sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="hud">Vector tile-server viewer — self-hosted MVT + glyphs.</div>
+
+  <!-- maplibre-gl is loaded by the embedding page; this file is the served
+       document at GET / and is verified to reference maplibre by the tests. -->
+  <script src="./glyphs/../vendor/maplibre-gl.js"></script>
+  <script>
+    // The tile server serves its own glyphs at /glyphs/{fontstack}/{range}.pbf
+    // (adr-0059) and tiles at /tiles/{z}/{x}/{y}.mvt — no third-party CDN.
+    const style = {
+      version: 8,
+      glyphs: location.origin + '/glyphs/{fontstack}/{range}.pbf',
+      sources: {
+        basemap: {
+          type: 'vector',
+          tiles: [location.origin + '/tiles/{z}/{x}/{y}.mvt'],
+          minzoom: 10, maxzoom: 16,
+        },
+      },
+      layers: [
+        // Ground matched to the production palette (`vector-web/static/index.html`,
+  // and `vector-android/.../VectorStyle.kt`) so this page shows the same world.
+  { id: 'bg', type: 'background', paint: { 'background-color': '#1a1f2b' } },
+        { id: 'roads', type: 'line', source: 'basemap', 'source-layer': 'basemap',
+          filter: ['==', ['get', 'kind'], 'road'],
+          paint: { 'line-color': '#4ea8ff', 'line-width': 2 } },
+        { id: 'buildings', type: 'fill', source: 'basemap', 'source-layer': 'basemap',
+          filter: ['==', ['get', 'kind'], 'building'],
+          paint: { 'fill-color': '#1b212c', 'fill-outline-color': '#1a202b' } },
+        { id: 'labels', type: 'symbol', source: 'basemap', 'source-layer': 'basemap',
+          filter: ['has', 'name'],
+          layout: { 'text-field': ['get', 'name'], 'text-font': ['Open Sans Regular'], 'text-size': 12 },
+          paint: { 'text-color': '#dfe6f0', 'text-halo-color': '#1a1f2b', 'text-halo-width': 1.5 } },
+      ],
+    };
+    // Guard: maplibre-gl may be absent when served standalone (vector-web
+    // embeds it). Only initialize if present.
+    if (typeof maplibregl !== 'undefined') {
+      const map = new maplibregl.Map({ container: 'map', style, center: [51.507, 25.295], zoom: 12 });
+      map.addControl(new maplibregl.NavigationControl());
+    } else {
+      document.getElementById('hud').textContent += ' (maplibre-gl not loaded — view via vector-web /vendor)';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+# CODEOWNERS — legal edit boundary (Bible §8 R1, Blueprint §5)
+# Format: <path> <owners>
+# Primary owner first, secondary owners after.
+
+* d1-platform

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Night window colours. The dark theme is designed rather than inverted; see
+     `design/VectorColor.kt`'s `DarkColors`. The field is a warm-neutral charcoal
+     (#14161A), not a blue-black, so the window does not fight the map's own dark
+     cartography for the same hue. -->
+<resources>
+    <!-- Ramp.night100 — VectorColors.field in the dark theme. -->
+    <color name="vector_field">#14161A</color>
+    <!-- Ramp.nightInk — VectorColors.ink in the dark theme. -->
+    <color name="vector_ink">#F2F0EA</color>
+    <!-- Ramp.cerulean400 — VectorColors.primary in the dark theme. -->
+    <color name="vector_primary">#5C9BD1</color>
+</resources>

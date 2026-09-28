@@ -1,0 +1,12 @@
+[package]
+name = "vector-tile-server"
+version = "0.1.0"
+edition = "2021"
+description = "Vector — vector-tile-server (Rust serving engine)"
+
+[dependencies]
+axum = "0.7"
+tokio = { version = "1", features = ["full"] }
+
+[dev-dependencies]
+tower = { version = "0.4", features = ["util"] }

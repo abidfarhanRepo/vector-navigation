@@ -1,0 +1,2381 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "description": "Vector Knowledge Graph v1 (file-based). Schema-compatible stand-in for the future E3 hybrid platform (KG §5, adr-0004). Keyed by kg://<type>/<slug> for content-addressed dedup.",
+  "nodes": [
+    {
+      "id": "kg://repo/vector-governance",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-governance",
+        "owner_squad": "d7-docs",
+        "purpose": "Constitution, ADRs, registry, KG index"
+      }
+    },
+    {
+      "id": "kg://repo/vector-contracts",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-contracts",
+        "owner_squad": "d3-architecture",
+        "purpose": "Language-neutral shared contracts"
+      }
+    },
+    {
+      "id": "kg://repo/vector-common",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-common",
+        "owner_squad": "d3-architecture",
+        "purpose": "Shared domain models/utilities (Node/TS tier)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-playground",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-playground",
+        "owner_squad": "d8-research",
+        "purpose": "Experiments/prototypes (never production)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-ingestion",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-ingestion",
+        "owner_squad": "d6-data",
+        "purpose": "Ingest + normalize geographic source data to contract shapes (Python)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-map-store",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-map-store",
+        "owner_squad": "d2-product",
+        "purpose": "Persist + query normalized map features (Python)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-tile-gen",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-tile-gen",
+        "owner_squad": "d2-product",
+        "purpose": "Generate vector tiles from map-store (Python)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-tile-server",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-tile-server",
+        "owner_squad": "d2-product",
+        "purpose": "Rust engine serving vector tiles over HTTP"
+      }
+    },
+    {
+      "id": "kg://repo/vector-osrm",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-25",
+      "provenance": "cto/session-50",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-osrm",
+        "owner_squad": "d2-product",
+        "purpose": "Real-Qatar data + local-run pipeline; holds qatar.geojson, baked MVT tiles, dynamic cache, OSRM extract (data gitignored)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-infra",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-infra",
+        "owner_squad": "d1-platform",
+        "purpose": "Infra strategy + runbooks (markdown-only skeleton)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-registry",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-12",
+      "provenance": "cto/session-10",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-registry",
+        "owner_squad": "d1-platform",
+        "purpose": "E9 Registry & Ownership service"
+      }
+    },
+    {
+      "id": "kg://repo/vector-bus",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-12",
+      "provenance": "cto/session-10",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-bus",
+        "owner_squad": "d1-platform",
+        "purpose": "E2 Communication & Event Backbone"
+      }
+    },
+    {
+      "id": "kg://adr/0017",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-12",
+      "provenance": "cto/session-10",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Begin agent-platform foundation — E9 Registry + E2 Event Bus",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://doc/engineering-bible",
+      "type": "Document",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 1,
+      "status": "active",
+      "payload": {
+        "repo": "vector-governance",
+        "path": "docs/ENGINEERING_BIBLE.md",
+        "kind": "constitution",
+        "summary": "Binding constitution for all Vector agents (RFC 2119)."
+      }
+    },
+    {
+      "id": "kg://doc/org-blueprint",
+      "type": "Document",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 1,
+      "status": "active",
+      "payload": {
+        "repo": "vector-governance",
+        "path": "docs/ORGANIZATIONAL_BLUEPRINT.md",
+        "kind": "constitution",
+        "summary": "9-department AI agent org design."
+      }
+    },
+    {
+      "id": "kg://doc/master-orchestrator",
+      "type": "Document",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 1,
+      "status": "active",
+      "payload": {
+        "repo": "vector-governance",
+        "path": "docs/MASTER_ORCHESTRATOR.md",
+        "kind": "spec",
+        "summary": "Tier-1 COA agent specification."
+      }
+    },
+    {
+      "id": "kg://doc/knowledge-graph",
+      "type": "Document",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 1,
+      "status": "active",
+      "payload": {
+        "repo": "vector-governance",
+        "path": "docs/KNOWLEDGE_GRAPH.md",
+        "kind": "design",
+        "summary": "Permanent engineering memory design."
+      }
+    },
+    {
+      "id": "kg://doc/ai-research-charter",
+      "type": "Document",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 1,
+      "status": "active",
+      "payload": {
+        "repo": "vector-governance",
+        "path": "docs/AI_RESEARCH_DEPARTMENT.md",
+        "kind": "charter",
+        "summary": "D8 read-only intelligence charter."
+      }
+    },
+    {
+      "id": "kg://doc/wbs",
+      "type": "Document",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 1,
+      "status": "active",
+      "payload": {
+        "repo": "vector-governance",
+        "path": "docs/WBS.md",
+        "kind": "plan",
+        "summary": "Work breakdown structure E1-E9 + product scope tree."
+      }
+    },
+    {
+      "id": "kg://doc/master-roadmap",
+      "type": "Document",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 1,
+      "status": "active",
+      "payload": {
+        "repo": "vector-governance",
+        "path": "docs/Vector_Master_Roadmap.md",
+        "kind": "roadmap",
+        "summary": "Product vision & open-source strategy."
+      }
+    },
+    {
+      "id": "kg://doc/system-architecture",
+      "type": "Document",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 1,
+      "status": "active",
+      "payload": {
+        "repo": "vector-governance",
+        "path": "docs/Vector_System_Architecture.md",
+        "kind": "architecture",
+        "summary": "Foundation system architecture M0-M9."
+      }
+    },
+    {
+      "id": "kg://adr/0001",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Polyrepo with shared contracts monorepo",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0002",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Single-agent execution model with internal personas",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0003",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Mixed-by-layer technology stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0004",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Knowledge Graph v1 file-based",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0005",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Product-first sequencing (defer E1-E9 agent-platform)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0006",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Scaffold runtime = Node.js; Python/Rust installed per tier later",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0007",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "vector-common owns all shared domain models",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0008",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "vector-playground owns all experiments",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0009",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "vector-tile-server uses Rust engine",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0010",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "vector-infra markdown-only skeleton (infra strategy)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0011",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "vector-ingestion bounded context + Python stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0012",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "vector-map-store bounded context + Python stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0013",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "vector-tile-gen bounded context + Python stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://concept/polyrepo",
+      "type": "Concept",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.8,
+      "status": "active",
+      "payload": {
+        "term": "polyrepo",
+        "definition": "Multiple independent repositories with a central registry; avoids agent collisions (Blueprint §11)."
+      }
+    },
+    {
+      "id": "kg://concept/node-scaffold-runtime",
+      "type": "Concept",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/session-2",
+      "confidence": 0.8,
+      "status": "active",
+      "payload": {
+        "term": "node-scaffold-runtime",
+        "definition": "All repos use Node ESM for docs/structure/CI validation even when the product runtime is Python/Rust; native runtime deferred until toolchain installed (adr-0006)."
+      }
+    },
+    {
+      "id": "kg://concept/product-first",
+      "type": "Concept",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.8,
+      "status": "active",
+      "payload": {
+        "term": "product-first",
+        "definition": "Build the navigation product (M0-M9) before the E1-E9 agent-orchestration platform."
+      }
+    },
+    {
+      "id": "kg://concept/mixed-by-layer",
+      "type": "Concept",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "cto/bootstrap",
+      "confidence": 0.8,
+      "status": "active",
+      "payload": {
+        "term": "mixed-by-layer",
+        "definition": "Python for research/pipelines, Rust/Go for engines, Node/TS for shared tier."
+      }
+    },
+    {
+      "id": "kg://lesson/haversine-distance-preference",
+      "type": "Lesson",
+      "version": 1,
+      "created_at": "2026-07-11",
+      "provenance": "d8-research/haversine-bench",
+      "confidence": 0.7,
+      "status": "active",
+      "payload": {
+        "summary": "Prefer the haversine formula over a flat-plane approximation for coordinate distance; haversine is ~104 ns/call (effectively free) while flat-plane adds up to ~55 m error at city scale.",
+        "incident_ref": null,
+        "root_cause": "Flat-plane approximation trades ~6% speed for up to ~55.4 m max / 21.0 m mean error at city scale (200k random pairs in a Berlin-sized box).",
+        "action": "Use haversineMeters(a, b) (vector-playground/src/haversine.mjs; mirrored in vector-common coords) for distance; only substitute flat-plane if a profiler proves a distance hotspot.",
+        "verification": "vector-playground/experiments/haversine-bench/RESULTS.md (104.4 ns/call haversine vs 97.9 ns/call flat-plane, 55.4 m max error); guarded by vector-playground/test/haversine.test.js (Berlin->Paris ~878 km, 1deg lat ~111 km, symmetry, identity).",
+        "repo": "vector-playground",
+        "path": "src/haversine.mjs"
+      }
+    },
+    {
+      "id": "kg://repo/vector-kg-graph",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-12",
+      "provenance": "cto/session-11",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-kg-graph",
+        "owner_squad": "d7-docs",
+        "purpose": "E3 Knowledge Graph (kg-graph-svc, kg-vector-svc)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-kg-ingest",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-12",
+      "provenance": "cto/session-11",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-kg-ingest",
+        "owner_squad": "d7-docs",
+        "purpose": "E3 KG ingest/retrieval/reconcile (subscribes to vector-bus)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-coa-fleet",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-12",
+      "provenance": "cto/session-12",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-coa-fleet",
+        "owner_squad": "d1-platform",
+        "purpose": "E1 Agent Orchestration Core — Fleet Control Plane (scheduler, priority queue, autoscaler); consumes E2 Bus by DI"
+      }
+    },
+    {
+      "id": "kg://repo/vector-coa-runtime",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-12",
+      "provenance": "cto/session-12",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-coa-runtime",
+        "owner_squad": "d3-architecture",
+        "purpose": "E1 Agent Orchestration Core — Orchestrator Runtime (planner, decomposer, arbiter, review-router); consumes E2 Bus + E9 Registry + E4 gates by DI"
+      }
+    },
+    {
+      "id": "kg://repo/vector-ci",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-12",
+      "provenance": "cto/session-12",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-ci",
+        "owner_squad": "d1-platform",
+        "purpose": "E4 Engineering Gates & CI/CD — runtime ci-svc (engine + quality/license/security gates); consumes E2 Bus by DI"
+      }
+    },
+    {
+      "id": "kg://repo/vector-security",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-12",
+      "provenance": "cto/session-13",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-security",
+        "owner_squad": "d5-security",
+        "purpose": "E5 Security & Compliance Platform — vault-svc (token-broker), audit-log, threat-intel; consumes E2 Bus by DI"
+      }
+    },
+    {
+      "id": "kg://repo/vector-observability",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-12",
+      "provenance": "cto/session-14",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-observability",
+        "owner_squad": "d1-platform",
+        "purpose": "E6 Observability & Reliability — otel-svc (metrics/logs/traces + alert-mgr); consumes E2 Bus + E9 Registry + E3 KG by DI"
+      }
+    },
+    {
+      "id": "kg://repo/vector-agents",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-15",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-agents",
+        "owner_squad": "d1-platform",
+        "purpose": "E7 Department Agent Frameworks — agents-svc (worker-fw, dma-fw, sla-fw, research-pipeline); consumes E2 Bus + E9 Registry + E3 KG by DI"
+      }
+    },
+    {
+      "id": "kg://repo/vector-docs",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-15",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-docs",
+        "owner_squad": "d7-docs",
+        "purpose": "E8 Documentation & Knowledge Tooling — docs-svc (doc-lint, adr-tool, kg-portal); consumes E2 Bus + E9 Registry + E3 KG by DI"
+      }
+    },
+    {
+      "id": "kg://adr/0023",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-15",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "E7 Department Agent Frameworks — lift ADR-0005 deferral for E7",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0024",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-15",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "E8 Documentation & Knowledge Tooling — lift ADR-0005 deferral for E8",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://repo/vector-routing",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-16",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-routing",
+        "owner_squad": "d2-product",
+        "purpose": "M2 Navigation/Routing engine — routing graph + Dijkstra/A* + RoutingService; self-contained Python"
+      }
+    },
+    {
+      "id": "kg://repo/vector-web",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-26",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-web",
+        "owner_squad": "d2-web",
+        "purpose": "Web composition root — MapLibre viewer + proxy to routing/traffic/geocoder engines at a single self-hosted origin; installable PWA (adr-0063)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-vision",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-18",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-vision",
+        "owner_squad": "d2-product",
+        "purpose": "M3 Computer Vision engine — CV pipeline + connected-component detection + georeference to GeoJSON; self-contained Python"
+      }
+    },
+    {
+      "id": "kg://adr/0025",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-16",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "M2 Navigation Engine — vector-routing bounded context + Python stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0026",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-17",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "M2 live route-overlay — M1 × M2 integration (routing HTTP API behind the tile-server)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0027",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-18",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "M3 Computer Vision — vector-vision bounded context + Python stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0028",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-19",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "M3 live CV overlay — M1 × M3 integration (vision HTTP API behind the tile-server)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0029",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-20",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Networked E2 Event Bus — operationalize E2 (BusServer HTTP+SSE + NetworkBusClient fleet adapters, port 8090)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://repo/vector-reconstruction",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-14",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-reconstruction",
+        "owner_squad": "d2-product",
+        "purpose": "Road Reconstruction engine — reconstruct road centerlines from observations/ways into a RoadGraph; self-contained Python"
+      }
+    },
+    {
+      "id": "kg://adr/0030",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-14",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Road Reconstruction — vector-reconstruction bounded context + Python stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0031",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/session-22",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Road Reconstruction live overlay — M1 × reconstruction integration (reconstruction HTTP API behind the tile-server)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://repo/vector-traffic",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-16",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-traffic",
+        "owner_squad": "d2-product",
+        "purpose": "Crowdsourced traffic engine — estimates per-segment speed/congestion from GPS probe points over a road network; self-contained Python"
+      }
+    },
+    {
+      "id": "kg://adr/0032",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-16",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Crowdsourced traffic — vector-traffic bounded context + Python stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0033",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-17",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Crowdsourced traffic live overlay — M1 × traffic integration (traffic HTTP API behind the tile-server)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://repo/vector-offline-maps",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-18",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-offline-maps",
+        "owner_squad": "d2-product",
+        "purpose": "Offline maps engine — estimates offline package tile counts/size from a bbox+zoom range and maintains a region registry; self-contained Python"
+      }
+    },
+    {
+      "id": "kg://adr/0034",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-18",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Offline maps — vector-offline-maps bounded context + Python stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0035",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-18",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Offline maps live overlay — M1 × M7 integration (offline HTTP API behind the tile-server)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://repo/vector-hdmaps",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-19",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-hdmaps",
+        "owner_squad": "d2-product",
+        "purpose": "HD maps engine — models lanes as directed polylines with a LaneGraph topology and emits GeoJSON lane LineStrings; self-contained Python"
+      }
+    },
+    {
+      "id": "kg://adr/0036",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-19",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "HD maps — vector-hdmaps bounded context + Python stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0037",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-19",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "HD maps live overlay — M1 × M8 integration (HD-maps HTTP API behind the tile-server)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://repo/vector-global",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-20",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-global",
+        "owner_squad": "d2-product",
+        "purpose": "Global basemap engine — maintains a worldwide RegionCatalog and serves region Polygons (GeoJSON) by bbox/tier; self-contained Python"
+      }
+    },
+    {
+      "id": "kg://adr/0038",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-20",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Global basemap — vector-global bounded context + Python stack",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0039",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-13",
+      "provenance": "cto/wave-20",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Global basemap live overlay — M1 × phase-9 integration (Global HTTP API behind the tile-server)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0042",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-07-14",
+      "provenance": "cto/wave-24",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "M2 turn-by-turn navigation overlay — M1 × M2 integration (navigation HTTP API behind the tile-server)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://adr/0043",
+      "type": "adr",
+      "version": "1.0.0",
+      "created_at": "2026-07-14",
+      "provenance": "vector-governance/adr/adr-0043-routing-bus-consumer.md",
+      "confidence": 1,
+      "status": "accepted",
+      "payload": {
+        "title": "Routing bus consumer",
+        "summary": "vector-routing consumes E2 bus for navigation requests/results"
+      }
+    },
+    {
+      "id": "kg://repo/vector-logistics",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-07-14",
+      "provenance": "cto/wave-28",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-logistics",
+        "owner_squad": "d2-product",
+        "purpose": "M28 Multi-stop logistics routing — E2 bus consumer (agent://logistics.vector-01) for logistics requests/results over :8090; also HTTP /logistics on :8088; self-contained Python"
+      }
+    },
+    {
+      "id": "kg://service/logistics-svc",
+      "type": "Service",
+      "version": 1,
+      "created_at": "2026-07-14",
+      "provenance": "cto/wave-28",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "logistics-svc",
+        "repo": "vector-logistics",
+        "owner_squad": "d2-product",
+        "purpose": "E2 bus consumer for multi-stop logistics tasks on #tasks and logistics.result on #events (VECTOR_BUS_URL-gated LocalBus/NetworkBusClient)"
+      }
+    },
+    {
+      "id": "kg://service/logistics-http-svc",
+      "type": "Service",
+      "version": 1,
+      "created_at": "2026-07-14",
+      "provenance": "cto/wave-28",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "logistics-http-svc",
+        "repo": "vector-logistics",
+        "owner_squad": "d2-product",
+        "purpose": "Multi-stop logistics HTTP API — serves logistics routing as GeoJSON over HTTP /logistics on :8088 (proxied via tile-server nginx :8080)"
+      }
+    },
+    {
+      "id": "kg://adr/0044",
+      "type": "adr",
+      "version": "1.0.0",
+      "created_at": "2026-07-14",
+      "provenance": "vector-governance/adr/adr-0044-logistics-bus-consumer.md",
+      "confidence": 1,
+      "status": "accepted",
+      "payload": {
+        "title": "Logistics bus consumer",
+        "summary": "vector-logistics consumes E2 bus for multi-stop logistics requests/results"
+      }
+    },
+    {
+      "id": "kg://adr/0045",
+      "type": "adr",
+      "version": "1.0.0",
+      "created_at": "2026-07-14",
+      "provenance": "vector-governance/adr/adr-0045-logistics-vrp-multivehicle.md",
+      "confidence": 1,
+      "status": "accepted",
+      "payload": {
+        "title": "Logistics multi-vehicle VRP-lite extension",
+        "summary": "vector-logistics extended in place from single-vehicle TSP-lite to multi-vehicle VRP-lite (optional vehicles/depots/balanced request + routes/vehicles result); reuses agent://logistics.vector-01, same 5 channels/envelope, no vector-bus core change; vehicles==1 unchanged"
+      }
+    },
+    {
+      "id": "kg://adr/0046",
+      "type": "adr",
+      "version": "1.0.0",
+      "created_at": "2026-07-14",
+      "provenance": "vector-governance/adr/adr-0046-logistics-cvrp.md",
+      "confidence": 1,
+      "status": "accepted",
+      "payload": {
+        "title": "Logistics capacitated VRP (CVRP)",
+        "summary": "vector-logistics extended in place from multi-vehicle VRP-lite to Capacitated VRP (optional per-vehicle capacities + per-stop demands; capacity-aware sweep / nearest-depot; per-vehicle load; vehicles==1 & no-capacities unchanged), adr-0046; reuses agent://logistics.vector-01"
+      }
+    },
+    {
+      "id": "kg://adr/0048",
+      "type": "adr",
+      "version": "1.0.0",
+      "created_at": "2026-07-15",
+      "provenance": "vector-governance/adr/adr-0048-logistics-vrptw-local-search.md",
+      "confidence": 1,
+      "status": "accepted",
+      "payload": {
+        "title": "Logistics VRPTW local-search hardening (Or-opt + cross-route)",
+        "summary": "vector-logistics window-optimizing solver hardened with Or-opt intra-route chain moves and capacity-aware cross-route inter-vehicle relocation minimizing (window_violations, travel); active only when time windows present; no-window/fixed_order paths unchanged; reuses agent://logistics.vector-01, same channels/envelope/result keys, no vector-bus core change"
+      }
+    },
+    {
+      "id": "kg://adr/0060",
+      "type": "adr",
+      "version": "1.0.0",
+      "created_at": "2026-07-17",
+      "provenance": "vector-governance/adr/adr-0060-mobile-flutter-client.md",
+      "confidence": 1,
+      "status": "superseded",
+      "payload": {
+        "title": "Android-first Flutter mobile client (self-hosted, zero third-party)",
+        "summary": "Android-first Flutter client (vector-mobile, Dart) over the single self-hosted origin; superseded by adr-0063 (web PWA-first, native deferred). Retained for history."
+      }
+    },
+    {
+      "id": "kg://adr/0062",
+      "type": "adr",
+      "version": "1.0.0",
+      "created_at": "2026-07-19",
+      "provenance": "vector-governance/adr/adr-0062-waze-navigation-ux-overhaul.md",
+      "confidence": 1,
+      "status": "accepted",
+      "payload": {
+        "title": "Waze-primary navigation UX overhaul (web viewer)",
+        "summary": "vector-web MapLibre style + chrome overhaul: zoom-interpolated road widths, label decluttering, Waze-matched dark palette, 3D/pitch toggle, route casing; self-hosted single origin; no backend contract change."
+      }
+    },
+    {
+      "id": "kg://adr/0063",
+      "type": "adr",
+      "version": "1.0.0",
+      "created_at": "2026-07-20",
+      "provenance": "vector-governance/adr/adr-0063-web-pwa-first.md",
+      "confidence": 1,
+      "status": "accepted",
+      "payload": {
+        "title": "Web-first distribution via installable PWA (native apps deferred)",
+        "summary": "Ship Vector to phones/desktops first as an installable PWA on the existing vector-web single origin; service worker precaches app shell for offline launch but serves all live APIs (route/navigate/traffic/tiles/glyphs/search/incidents) network-only; icons generated from source (no third-party assets); supersedes adr-0060 (Flutter native); native Android/iOS deferred to a later phase."
+      }
+    },
+    {
+      "id": "kg://service/privacy-svc",
+      "type": "Service",
+      "version": 1,
+      "created_at": "2026-08-04",
+      "provenance": "cto/wave-evolve-01",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "privacy-svc",
+        "repo": "vector-privacy",
+        "purpose": "Location privacy gate invoked at the ingest boundary; emits dropped-reason counters (issue 10)"
+      }
+    },
+    {
+      "id": "kg://repo/vector-privacy",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-08-04",
+      "provenance": "cto/wave-evolve-01",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-privacy",
+        "owner_squad": "d5-security",
+        "purpose": "Privacy gate library � single pure definition of location-data privacy rules (adr-0065), vendored into vector-web + vector-learning"
+      }
+    },
+    {
+      "id": "kg://adr/0065",
+      "type": "Decision",
+      "version": 1,
+      "created_at": "2026-08-04",
+      "provenance": "cto/wave-evolve-01",
+      "confidence": 0.9,
+      "status": "accepted",
+      "payload": {
+        "title": "Privacy gate � learn from aggregates over road segments, never from individual traces (K=5, 72h TTL)",
+        "supersedes": null
+      }
+    },
+    {
+      "id": "kg://concept/learn-from-aggregates",
+      "type": "Concept",
+      "version": 1,
+      "created_at": "2026-08-04",
+      "provenance": "cto/wave-evolve-01",
+      "confidence": 0.8,
+      "status": "active",
+      "payload": {
+        "term": "learn-from-aggregates",
+        "definition": "Learn from aggregates over road segments; never from individual traces. Raw GPS lives in a 72h quarantine and is never what persists; what persists is per-segment evidence past a k-anonymity floor (adr-0065)."
+      }
+    },
+    {
+      "id": "kg://repo/vector-learning",
+      "type": "Repository",
+      "version": 1,
+      "created_at": "2026-08-04",
+      "provenance": "cto/wave-evolve-01",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "vector-learning",
+        "owner_squad": "d6-data",
+        "purpose": "Self-evolving map aggregation engine (issue 05, adr-0065) — map-match + k-anonymous aggregate + detectors"
+      }
+    },
+    {
+      "id": "kg://schema/learned-fact",
+      "type": "Schema",
+      "version": 1,
+      "created_at": "2026-08-04",
+      "provenance": "cto/wave-evolve-01",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "learned-fact",
+        "description": "Schema for facts produced by vector-learning aggregation. Emitted only when k-anonymity floor (K=5) is met. Never contains identity, raw coordinates, or sub-hour precision timestamps.",
+        "fact_type": ["speed_profile", "geometry_correction", "road_candidate", "turn_restriction"],
+        "fields": {
+          "fact_type": "string enum from fact_type array",
+          "segment_id": "string (for speed_profile, geometry_correction)",
+          "band": "int 0..7 (for speed_profile, see adr-0067)",
+          "n_trips": "int (>= K_ANONYMITY_FLOOR=5)",
+          "median_speed_kmh": "float or null (for speed_profile)",
+          "p85_speed_kmh": "float or null (for speed_profile)",
+          "sample_span_h": "float — wall-clock span of contributing observations",
+          "evidence_count": "int — evidence units behind this fact",
+          "decay": "float — confidence decay factor (0.95 per week, applied at query time)",
+          "contradiction": "boolean — true if contradicts higher-confidence fact",
+          "provenance": "object { batch_id, stage: \"learning\", produced_at, watermark_id } — never contains identity/pseudonym/device/IP",
+          "version": "int — monotonically increasing version per fact_id for conflict resolution",
+          "status": "string — active | superseded | contradicted"
+        },
+        "constraints": [
+          "No pseudonym field permitted",
+          "No raw coordinate field permitted beyond centroid",
+          "No timestamp finer than time-band bucket (band only, see adr-0067)",
+          "No device ID, IP address, or user identifier permitted",
+          "n_trips must be >= K_ANONYMITY_FLOOR (5)"
+        ],
+        "decay_formula": "confidence = base_confidence * (0.95 ^ weeks_since_first_observation)"
+      }
+    },
+    {
+      "id": "kg://service/learning-svc",
+      "type": "Service",
+      "version": 1,
+      "created_at": "2026-08-04",
+      "provenance": "cto/wave-evolve-01",
+      "confidence": 0.9,
+      "status": "active",
+      "payload": {
+        "name": "learning-svc",
+        "repo": "vector-learning",
+        "purpose": "Resumable, idempotent aggregation batch: quarantine store -> map-match -> k-anonymous evidence -> learned facts"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://doc/engineering-bible",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://doc/org-blueprint",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://doc/master-orchestrator",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://doc/knowledge-graph",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://doc/ai-research-charter",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://doc/wbs",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://doc/master-roadmap",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://doc/system-architecture",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0001",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0002",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0003",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0004",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0005",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0006",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0007",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0008",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://doc/engineering-bible",
+      "to": "kg://concept/polyrepo",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://doc/wbs",
+      "to": "kg://concept/product-first",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://doc/system-architecture",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://adr/0001",
+      "to": "kg://concept/polyrepo",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0005",
+      "to": "kg://concept/product-first",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0003",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0007",
+      "to": "kg://repo/vector-common",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0008",
+      "to": "kg://repo/vector-playground",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://repo/vector-common",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-playground",
+      "to": "kg://repo/vector-common",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-playground",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-ingestion",
+      "to": "kg://adr/0011",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-map-store",
+      "to": "kg://adr/0012",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-tile-gen",
+      "to": "kg://adr/0013",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://adr/0009",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-osrm",
+      "to": "kg://repo/vector-tile-gen",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-osrm",
+      "to": "kg://repo/vector-tile-server",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-infra",
+      "to": "kg://adr/0010",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0011",
+      "to": "kg://repo/vector-ingestion",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0012",
+      "to": "kg://repo/vector-map-store",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0013",
+      "to": "kg://repo/vector-tile-gen",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0009",
+      "to": "kg://repo/vector-tile-server",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0010",
+      "to": "kg://repo/vector-infra",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0009",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0009",
+      "to": "kg://concept/node-scaffold-runtime",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0011",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0011",
+      "to": "kg://concept/node-scaffold-runtime",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0012",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0012",
+      "to": "kg://concept/node-scaffold-runtime",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0013",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0013",
+      "to": "kg://concept/node-scaffold-runtime",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0010",
+      "to": "kg://concept/product-first",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-ingestion",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-ingestion",
+      "to": "kg://repo/vector-common",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-map-store",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-map-store",
+      "to": "kg://repo/vector-common",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-gen",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-gen",
+      "to": "kg://repo/vector-common",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-gen",
+      "to": "kg://repo/vector-map-store",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-common",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-tile-gen",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-ingestion",
+      "to": "kg://repo/vector-infra",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-map-store",
+      "to": "kg://repo/vector-infra",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-gen",
+      "to": "kg://repo/vector-infra",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-infra",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-infra",
+      "to": "kg://repo/vector-governance",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-playground",
+      "to": "kg://lesson/haversine-distance-preference",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://lesson/haversine-distance-preference",
+      "to": "kg://repo/vector-playground",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0017",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-registry",
+      "to": "kg://doc/wbs",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://repo/vector-bus",
+      "to": "kg://doc/wbs",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://repo/vector-registry",
+      "to": "kg://repo/vector-governance",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://repo/vector-kg-ingest",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-kg-ingest",
+      "to": "kg://repo/vector-kg-graph",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-kg-ingest",
+      "to": "kg://repo/vector-registry",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-kg-graph",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-kg-graph",
+      "to": "kg://doc/wbs",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://repo/vector-kg-ingest",
+      "to": "kg://doc/wbs",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://repo/vector-coa-fleet",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-coa-runtime",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-coa-runtime",
+      "to": "kg://repo/vector-registry",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-coa-runtime",
+      "to": "kg://repo/vector-ci",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-ci",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-security",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-ci",
+      "to": "kg://repo/vector-security",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-security",
+      "to": "kg://doc/wbs",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://repo/vector-observability",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-observability",
+      "to": "kg://repo/vector-registry",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-observability",
+      "to": "kg://repo/vector-kg-graph",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-observability",
+      "to": "kg://doc/wbs",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://repo/vector-agents",
+      "to": "kg://doc/wbs",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://repo/vector-agents",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-agents",
+      "to": "kg://repo/vector-kg-graph",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-agents",
+      "to": "kg://repo/vector-registry",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-agents",
+      "to": "kg://repo/vector-security",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-agents",
+      "to": "kg://repo/vector-kg-ingest",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-docs",
+      "to": "kg://doc/wbs",
+      "type": "REFERENCES"
+    },
+    {
+      "from": "kg://repo/vector-docs",
+      "to": "kg://repo/vector-ci",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-docs",
+      "to": "kg://repo/vector-kg-graph",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-docs",
+      "to": "kg://repo/vector-registry",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-docs",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0023",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0024",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0023",
+      "to": "kg://repo/vector-agents",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0024",
+      "to": "kg://repo/vector-docs",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0025",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0025",
+      "to": "kg://repo/vector-routing",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://repo/vector-routing",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-routing",
+      "to": "kg://repo/vector-ingestion",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-routing",
+      "to": "kg://repo/vector-map-store",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://adr/0025",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0026",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0026",
+      "to": "kg://repo/vector-routing",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0026",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-routing",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0027",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0027",
+      "to": "kg://repo/vector-vision",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://repo/vector-vision",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-vision",
+      "to": "kg://repo/vector-ingestion",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-vision",
+      "to": "kg://repo/vector-map-store",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://adr/0027",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0028",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0028",
+      "to": "kg://repo/vector-vision",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0028",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-vision",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0029",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0029",
+      "to": "kg://repo/vector-bus",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0029",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0030",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0030",
+      "to": "kg://repo/vector-reconstruction",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0030",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-reconstruction",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-reconstruction",
+      "to": "kg://repo/vector-ingestion",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-reconstruction",
+      "to": "kg://repo/vector-map-store",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-routing",
+      "to": "kg://repo/vector-reconstruction",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0031",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0031",
+      "to": "kg://repo/vector-reconstruction",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0031",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-reconstruction",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0032",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0032",
+      "to": "kg://repo/vector-traffic",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0032",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-traffic",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-traffic",
+      "to": "kg://repo/vector-ingestion",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-traffic",
+      "to": "kg://repo/vector-map-store",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-traffic",
+      "to": "kg://repo/vector-reconstruction",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0033",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0033",
+      "to": "kg://repo/vector-traffic",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0033",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-traffic",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0034",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0035",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0034",
+      "to": "kg://repo/vector-offline-maps",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0035",
+      "to": "kg://repo/vector-offline-maps",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0034",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0035",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-offline-maps",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-offline-maps",
+      "to": "kg://repo/vector-ingestion",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-offline-maps",
+      "to": "kg://repo/vector-map-store",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-offline-maps",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0036",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0037",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0036",
+      "to": "kg://repo/vector-hdmaps",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0036",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0037",
+      "to": "kg://repo/vector-hdmaps",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0037",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-hdmaps",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-hdmaps",
+      "to": "kg://repo/vector-ingestion",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-hdmaps",
+      "to": "kg://repo/vector-map-store",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-hdmaps",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0038",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0039",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0038",
+      "to": "kg://repo/vector-global",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0038",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0039",
+      "to": "kg://repo/vector-global",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0039",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-global",
+      "to": "kg://repo/vector-contracts",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-global",
+      "to": "kg://repo/vector-ingestion",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-global",
+      "to": "kg://repo/vector-map-store",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-global",
+      "to": "kg://repo/vector-hdmaps",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-global",
+      "to": "kg://repo/vector-routing",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-global",
+      "to": "kg://repo/vector-traffic",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-global",
+      "to": "kg://repo/vector-vision",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-global",
+      "to": "kg://repo/vector-offline-maps",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-global",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0042",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0042",
+      "to": "kg://repo/vector-routing",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0042",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0043",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0043",
+      "to": "kg://repo/vector-routing",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://repo/vector-routing",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://adr/0043",
+      "to": "kg://adr/0029",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-logistics",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-tile-server",
+      "to": "kg://repo/vector-logistics",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-logistics",
+      "to": "kg://service/logistics-svc",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-logistics",
+      "to": "kg://service/logistics-http-svc",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://service/logistics-svc",
+      "to": "kg://repo/vector-bus",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://service/logistics-http-svc",
+      "to": "kg://repo/vector-tile-server",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://adr/0044",
+      "to": "kg://repo/vector-logistics",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0044",
+      "to": "kg://adr/0043",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0045",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0045",
+      "to": "kg://adr/0044",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0045",
+      "to": "kg://repo/vector-logistics",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0046",
+      "to": "kg://repo/vector-logistics",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0046",
+      "to": "kg://adr/0045",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0046",
+      "to": "kg://adr/0044",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0048",
+      "to": "kg://repo/vector-logistics",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0048",
+      "to": "kg://adr/0046",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0063",
+      "to": "kg://repo/vector-web",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0063",
+      "to": "kg://concept/mixed-by-layer",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://adr/0063",
+      "to": "kg://adr/0060",
+      "type": "SUPERSEDES"
+    },
+    {
+      "from": "kg://adr/0062",
+      "to": "kg://repo/vector-web",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://repo/vector-governance",
+      "to": "kg://adr/0065",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://adr/0065",
+      "to": "kg://repo/vector-privacy",
+      "type": "IMPLEMENTS"
+    },
+    {
+      "from": "kg://adr/0065",
+      "to": "kg://concept/learn-from-aggregates",
+      "type": "DECIDED_BY"
+    },
+    {
+      "from": "kg://repo/vector-web",
+      "to": "kg://repo/vector-privacy",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-privacy",
+      "to": "kg://service/privacy-svc",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-learning",
+      "to": "kg://service/learning-svc",
+      "type": "CONTAINS"
+    },
+    {
+      "from": "kg://repo/vector-learning",
+      "to": "kg://repo/vector-web",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-learning",
+      "to": "kg://repo/vector-privacy",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "kg://repo/vector-learning",
+      "to": "kg://repo/vector-kg-graph",
+      "type": "DEPENDS_ON"
+    },
+    { "from": "kg://repo/vector-learning", "to": "kg://schema/learned-fact", "type": "IMPLEMENTS" },
+    { "from": "kg://schema/learned-fact", "to": "kg://concept/learn-from-aggregates", "type": "REFERENCES" },
+    { "from": "kg://schema/learned-fact", "to": "kg://adr/0065", "type": "DECIDED_BY" }
+  ]
+}

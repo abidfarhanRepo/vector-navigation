@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vector_tile_gen"
+version = "0.1.0"
+description = "Vector — vector-tile-gen"
+requires-python = ">=3.11"
+dependencies = ["mapbox-vector-tile>=2.2,<4", "shapely>=2.0,<3"]
+
+[project.scripts]
+vector-tile_gen-health = "vector_tile_gen.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vector_tile_gen"]

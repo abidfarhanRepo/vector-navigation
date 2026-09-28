@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vector.dev/schemas/coordinate.schema.json",
+  "title": "Coordinate",
+  "description": "WGS84 coordinate. Mirrors proto Coordinate (vector.proto).",
+  "type": "object",
+  "required": ["lat", "lon"],
+  "additionalProperties": false,
+  "properties": {
+    "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+    "lon": { "type": "number", "minimum": -180, "maximum": 180 }
+  }
+}

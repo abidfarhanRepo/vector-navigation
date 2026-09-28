@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The launcher tile's ground.
+
+         Moved from `#161B26` to the design system's night surface, so the icon
+         sits in the same world as the app it opens. The mark itself is
+         unchanged: it is Vector's own navigation cursor, split down its axis
+         into the walk line's two tones, and it is the one piece of the old
+         identity that was already art-directed rather than inherited. -->
+    <color name="ic_launcher_background">#1D2026</color>
+</resources>

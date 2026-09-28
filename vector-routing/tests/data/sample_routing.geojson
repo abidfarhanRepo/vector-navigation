@@ -1,0 +1,40 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"highway": "primary", "maxspeed_kmh": 50, "name": "bottom-row"},
+      "geometry": {"type": "LineString", "coordinates": [[13.399, 52.519], [13.400, 52.519], [13.401, 52.519]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"highway": "primary", "maxspeed_kmh": 50, "name": "mid-row"},
+      "geometry": {"type": "LineString", "coordinates": [[13.399, 52.520], [13.400, 52.520], [13.401, 52.520]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"highway": "primary", "maxspeed_kmh": 50, "name": "top-row"},
+      "geometry": {"type": "LineString", "coordinates": [[13.399, 52.521], [13.400, 52.521], [13.401, 52.521]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"highway": "residential", "maxspeed_kmh": 30, "name": "left-col"},
+      "geometry": {"type": "LineString", "coordinates": [[13.399, 52.519], [13.399, 52.520], [13.399, 52.521]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"highway": "residential", "maxspeed_kmh": 30, "name": "mid-col"},
+      "geometry": {"type": "LineString", "coordinates": [[13.400, 52.519], [13.400, 52.520], [13.400, 52.521]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"highway": "tertiary", "maxspeed_kmh": 40, "name": "right-col-oneway", "oneway": "yes"},
+      "geometry": {"type": "LineString", "coordinates": [[13.401, 52.519], [13.401, 52.520], [13.401, 52.521]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"highway": "service", "maxspeed_kmh": 20, "name": "disconnected-a"},
+      "geometry": {"type": "LineString", "coordinates": [[13.500, 52.600], [13.501, 52.600]]}
+    }
+  ]
+}

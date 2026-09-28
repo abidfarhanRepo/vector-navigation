@@ -1,0 +1,278 @@
+# Vector — single-command self-hosted stack (issue 03).
+#
+#   git clone && cp .env.example .env && ./bootstrap.sh && docker compose up -d
+#
+# Absorbs the former vector-web / vector-traffic / vector-map-store composes
+# into ONE network with ONE `up`, exposing ONE published port (8088 -> web).
+# Backends are internal-only and reached by service name. No host-absolute
+# bind mounts survive: every piece of raw data lives in a named volume that
+# bootstrap.sh populates (see bootstrap.sh, the ONLY thing that touches data).
+#
+# Secrets never appear here — every token/password resolves from .env, and
+# the services refuse to boot with a default/demo token unless VECTOR_DEV=1.
+#
+# Ports inside the compose network (not published):
+#   routing:8081  traffic:8084  geocoder:8085  tiles:3000  osrm:5000
+
+services:
+  postgis:
+    image: postgis/postgis:16-3.4
+    container_name: vector-postgis
+    environment:
+      POSTGRES_USER: ${VECTOR_PG_USER}
+      POSTGRES_PASSWORD: ${VECTOR_PG_PASSWORD}
+      POSTGRES_DB: vectortraffic
+    volumes:
+      - vector-postgis-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${VECTOR_PG_USER} -d vectortraffic"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  routing:
+    build:
+      context: ./vector-routing
+      dockerfile: docker/Dockerfile
+    container_name: vector-routing
+    depends_on:
+      osrm:
+        condition: service_started
+    environment:
+      VECTOR_SERVICE_TOKEN: ${VECTOR_SERVICE_TOKEN}
+      ROUTING_GRAPH: /app/graph/${VECTOR_REGION}_roads.geojson
+      # NOTE: ADR-0072 ("OSRM contraction hierarchies as the routing engine") is
+      # ACCEPTED BUT NOT IMPLEMENTED. Nothing in vector-routing reads an OSRM
+      # URL — there is no `route_fast`, no `navigate_fast`, no
+      # `_route_with_fallback` and no `Router.assemble_from_keys`; those names
+      # appear only in the ADR's own text. A `VECTOR_OSRM_URL` here therefore
+      # configured nothing and advertised an engine that was never wired up, so
+      # it has been removed rather than left to mislead the next reader.
+      #
+      # The ADR's premise has also expired. It was written against a measured
+      # 3,237 ms median over a 1.32 M-node graph; after the pedestrian-way
+      # filter and the class-based speed model that same request measures
+      # 250-700 ms on this host. OSRM is still ~14x faster (28 ms), which is why
+      # the container stays as the accuracy harness's reference, but sub-second
+      # routing does not justify a rewrite whose own ADR spends four pages on
+      # how it silently deletes the learned-speed telemetry.
+      #
+      # The ETA-error log. Without it `POST /eta` answers 503 and DISCARDS the
+      # sample, and `GET /eta` reports "no ETA log configured" — so the
+      # falsifiable claim behind the entire self-evolving effort (issue 07 ->
+      # issue 10: do routes over learned segments predict better than routes
+      # over unlearned ones?) had nowhere to land. It was unset here, so every
+      # completed journey was refused at the door.
+      #
+      # A sample is a predicted duration, an observed duration and a coverage
+      # fraction. No coordinates and no identity, by construction — see the
+      # module docstring in eta_log.py.
+      VECTOR_ETA_LOG: /app/state/eta.jsonl
+    volumes:
+      - vector-data-network:/app/graph:ro
+      # Writable state. The graph mount is read-only, so the ETA log needs
+      # somewhere of its own; see VECTOR_ETA_LOG above.
+      - vector-routing-state:/app/state
+    command: ["python", "-m", "vector_routing.serve", "--port", "8081", "--graph", "/app/graph/${VECTOR_REGION}_roads.geojson"]
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8081/healthz', timeout=3)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  traffic:
+    build:
+      context: ./vector-traffic
+      dockerfile: docker/Dockerfile
+    container_name: vector-traffic
+    environment:
+      VECTOR_SERVICE_TOKEN: ${VECTOR_SERVICE_TOKEN}
+      TRAFFIC_GRAPH: /app/graph/${VECTOR_REGION}_roads.geojson
+      VECTOR_PG_DSN: postgresql://${VECTOR_PG_USER}:${VECTOR_PG_PASSWORD}@postgis:5432/vectortraffic
+    volumes:
+      - vector-data-network:/app/graph:ro
+    depends_on:
+      postgis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8084/healthz', timeout=3)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  # The tile server reads a RELEASE, not a directory of tiles.
+  #
+  # `TILE_DIR` points at `current`, which is a SYMLINK inside the volume to
+  # `releases/<release-id>/`. That indirection is the whole V7.7 publishing
+  # model: activation is one `rename(2)` over that symlink, so a release swap
+  # is atomic, needs no container restart, and rolls back by pointing it back.
+  #
+  # The VOLUME is still mounted at `/app/tiles` — the layout lives inside it:
+  #
+  #     /app/tiles/                  <- the volume, mounted read-only
+  #       releases/<release-id>/     <- immutable trees, one per release
+  #       current  -> releases/...   <- the only mutable byte-range
+  #       previous -> releases/...   <- the explicit rollback target
+  #
+  # Mounting the volume AT `/app/tiles/current` instead would defeat the point:
+  # the pointer has to be inside the volume for a swap to be visible to a
+  # running container. `tests/test_compose_config.py` pins the pair together.
+  #
+  # ONE-TIME MIGRATION. A volume populated before V7.7 is a FLAT tree of zoom
+  # directories with no `current` in it, and this `TILE_DIR` cannot read it —
+  # the map would be blank, silently. Two places create the layout, and both
+  # use `vector-tile-gen/scripts/import_legacy_tree.py`:
+  #
+  #   * `bootstrap.sh` step 3, for a fresh install;
+  #   * the production migration, per `.scratch/vector-product/
+  #     V7.7-MIGRATION-RUNBOOK.md`, which has NOT been performed on the live
+  #     host at the time of writing — production still runs `TILE_DIR=/app/tiles`
+  #     against its flat tree, and reverting this line is that migration's
+  #     rollback.
+  #
+  # So if this line ever reads `/app/tiles` again, either the migration was
+  # rolled back on purpose, or someone has silently undone it. The config test
+  # exists to make the second case impossible to do quietly.
+  tiles:
+    build:
+      context: ./vector-web
+      dockerfile: docker/Dockerfile.tiles
+    container_name: vector-tiles
+    environment:
+      TILE_DIR: /app/tiles/current
+      GLYPH_DIR: /app/glyphs
+      PORT: 3000
+    volumes:
+      - vector-data-tiles:/app/tiles:ro
+      - vector-data-glyphs:/app/glyphs:ro
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/healthz', timeout=3)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  geocoder:
+    build:
+      context: ./vector-geocoder
+      dockerfile: docker/Dockerfile
+    container_name: vector-geocoder
+    environment:
+      GEOCODER_INDEX: /app/data/geodata/${VECTOR_REGION}.geojson
+      # Overture POI layer (bootstrap.sh step 2b). Absent file = OSM-only
+      # search, i.e. exactly the pre-Overture behaviour.
+      VECTOR_PLACES_INDEX: /app/data/geodata/${VECTOR_REGION}_places.geojson
+      VECTOR_SERVICE_TOKEN: ${VECTOR_SERVICE_TOKEN}
+    volumes:
+      - vector-data-basemap:/app/data/geodata:ro
+    command: ["python", "-m", "vector_geocoder.serve", "--port", "8085", "--index", "/app/data/geodata/${VECTOR_REGION}.geojson", "--places", "/app/data/geodata/${VECTOR_REGION}_places.geojson"]
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8085/healthz', timeout=3)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  osrm:
+    image: osrm/osrm-backend:latest
+    container_name: vector-osrm
+    command: ["osrm-routed", "--algorithm", "mld", "/osm/${VECTOR_REGION}.osrm"]
+    volumes:
+      - vector-data-osrm:/osm:ro
+    ports:
+      # Bound to the LOOPBACK only. The accuracy harness
+      # (vector-web/tests/e2e/accuracy.spec.mjs) runs on the host and
+      # cross-checks Vector's distances against this second, independent
+      # routing implementation over the same OSM region — the strongest
+      # correctness reference available without buying a Google key. It
+      # previously used the public demo server, which made the check opt-in,
+      # rate-limited and dependent on the internet, so in practice it never ran.
+      #
+      # 127.0.0.1 and not 0.0.0.0: osrm-routed has no authentication, and
+      # nothing outside this host has any business calling it.
+      - "127.0.0.1:5000:5000"
+    healthcheck:
+      # The osrm-backend image ships neither curl nor wget, so the previous
+      # curl-based check could never succeed — the container reported
+      # unhealthy forever while serving routes fine. bash exists and /dev/tcp
+      # is compiled in, so probe the port with it.
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/5000' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    restart: unless-stopped
+
+  web:
+    build: ./vector-web
+    container_name: vector-web
+    depends_on:
+      routing:
+        condition: service_started
+      traffic:
+        condition: service_started
+      tiles:
+        condition: service_started
+      geocoder:
+        condition: service_started
+      osrm:
+        condition: service_started
+    environment:
+      VECTOR_WEB_TOKEN: ${VECTOR_WEB_TOKEN}
+      VECTOR_SERVICE_TOKEN: ${VECTOR_SERVICE_TOKEN}
+      VECTOR_ROUTING_URL: http://routing:8081
+      VECTOR_TRAFFIC_URL: http://traffic:8084
+      VECTOR_TILE_SERVER_URL: http://tiles:3000
+      VECTOR_GEOCODER_URL: http://geocoder:8085
+      VECTOR_OSRM_URL: http://osrm:5000
+      VECTOR_ROUTING_TRAFFIC_URL: http://routing:8081
+      VECTOR_DEV: ${VECTOR_DEV}
+      # Origin(s) the deployment is publicly reachable at. Empty for a purely
+      # local stack; set for a packaged/cross-origin client (see .env.example).
+      VECTOR_PUBLIC_ORIGIN: ${VECTOR_PUBLIC_ORIGIN:-}
+    # Published to host :9003 so the Cloudflare tunnel public hostname
+    # (your-host.example.com -> http://localhost:9003) reaches Vector directly,
+    # bypassing the reverse proxy and its 127.0.0.1:8080 binding (no collision).
+    ports:
+      - "9003:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=3)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+# Every volume pins an explicit `name:`.
+#
+# Without it Compose prefixes the project name, so these become
+# `vector_vector-data-*` while `bootstrap.sh` — which populates them with plain
+# `docker run -v vector-data-osrm:/osm ...` — writes to the UNPREFIXED names.
+# The stack then comes up mounting six empty volumes and dies with
+# "Required files are missing" (osrm) and "No such file or directory:
+# /app/graph/qatar_roads.geojson" (routing), immediately after a bootstrap that
+# reported success. Session 53 hit this and copied the data across by hand; that
+# fixed the symptom for one machine and left the trap armed for the next one.
+#
+# `name:` also makes the volume identity independent of the checkout directory:
+# the project name defaults to the folder name, so a clone into `vector-2/`
+# would otherwise silently get its own empty set.
+volumes:
+  # Writable state for vector-routing (the ETA-error log). Small, and kept
+  # separate from the map data so a re-bake never touches recorded measurements.
+  vector-routing-state:
+    name: vector-routing-state
+  vector-postgis-data:
+    name: vector-postgis-data
+  vector-data-network:
+    name: vector-data-network
+  vector-data-basemap:
+    name: vector-data-basemap
+  vector-data-tiles:
+    name: vector-data-tiles
+  vector-data-glyphs:
+    name: vector-data-glyphs
+  vector-data-osrm:
+    name: vector-data-osrm

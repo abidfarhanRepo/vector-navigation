@@ -1,0 +1,24 @@
+version: 1
+description: >
+  Validation rules binding shared DTOs/types to their JSON Schemas. Services MUST validate inbound
+  payloads against the referenced schema (Bible §3 S5, §16 ER2/ER3).
+
+rules:
+  - target: Coordinate
+    schema: schemas/coordinate.schema.json
+    enforce: [required, range]
+  - target: BoundingBox
+    schema: schemas/bounding-box.schema.json
+    enforce: [required, range, order]
+  - target: TileRequest
+    schema: schemas/tile.schema.json
+    enforce: [required, range]
+  - target: ErrorEnvelope
+    schema: schemas/error.schema.json
+    enforce: [required]
+  - target: LogisticsRequest
+    schema: schemas/logistics-request.schema.json
+    enforce: [required, range]
+  - target: LogisticsResult
+    schema: schemas/logistics-result.schema.json
+    enforce: [required]

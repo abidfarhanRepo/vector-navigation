@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Language build artifacts
+__pycache__/
+*.pyc
+target/
+dist/
+*.tsbuildinfo
+
+# Generated tile output (build artifact; regenerate via tile-gen build_m1_tiles.py).
+# The committed MVT fixture under tests/fixtures/ is intentionally NOT ignored.
+/tiles/
+
+# Secrets (never commit)
+.env
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Tile-set state written by a bake or re-bake (issue 08). The epoch and the
+# learned overlay are generated artifacts of the current tile tree.
+tiles/VERSION.json
+tiles/learned-overlay.geojson
+tiles/rejected-facts.json

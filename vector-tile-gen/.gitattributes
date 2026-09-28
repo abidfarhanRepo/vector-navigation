@@ -1,0 +1,3 @@
+# Normalize line endings to LF on commit; never store CRLF.
+# Windows checkouts reconvert automatically; the stored blob is always LF.
+* text=auto eol=lf

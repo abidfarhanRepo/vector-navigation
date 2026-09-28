@@ -1,0 +1,221 @@
+<body class="mode-explore">
+  <div id="map" role="application" aria-label="Vector navigation map"></div>
+
+  <!-- MODE SWITCHER (top-left): a quick way to get back to Explore -->
+  <div id="modebar">
+    <button class="mode-btn" id="mode-explore" title="Map">🗺️</button>
+  </div>
+
+  <!-- MORE: tucks the advanced/engineering controls out of the driver's way -->
+  <button id="more-toggle" title="More" aria-label="More controls">⋯</button>
+  <div id="more-scrim"></div>
+  <div id="more-sheet" role="menu" aria-label="Advanced controls">
+    <div class="grp-title">Navigation</div>
+    <button class="mbtn" id="gps-toggle" role="menuitemcheckbox"><span class="ic">📍</span><span>GPS follow</span></button>
+    <button class="mbtn" id="voice-toggle" role="menuitemcheckbox"><span class="ic">🔊</span><span>Voice guidance</span></button>
+    <button class="mbtn" id="pitch-toggle" role="menuitemcheckbox"><span class="ic">🏔️</span><span>3D view</span></button>
+    <button class="mbtn" id="theme-toggle" role="menuitemcheckbox"><span class="ic">🌗</span><span>Dark / light map</span></button>
+    <div class="grp-title">Traffic & reports</div>
+    <button class="mbtn" id="traffic-toggle" role="menuitemcheckbox"><span class="ic">🚦</span><span>Traffic mode</span></button>
+    <button class="mbtn" id="traffic-show"><span class="ic">🟢</span><span>Show traffic</span></button>
+    <button class="mbtn" id="traffic-clear"><span class="ic">🚫</span><span>Clear traffic</span></button>
+    <button class="mbtn" id="hazards-toggle" role="menuitemcheckbox"><span class="ic">⚠️</span><span>Hazards</span></button>
+    <button class="mbtn" id="report-toggle" role="menuitemcheckbox"><span class="ic">📣</span><span>Report a hazard</span></button>
+    <div class="grp-title">Stops & places</div>
+    <button class="mbtn" id="route-add-stop" role="menuitemcheckbox"><span class="ic">➕</span><span>Add a stop</span></button>
+    <button class="mbtn" id="along-toggle"><span class="ic">🔎</span><span>Find along route</span></button>
+    <button class="mbtn" id="pick-toggle" role="menuitemcheckbox"><span class="ic">🎯</span><span>Pick a location</span></button>
+    <button class="mbtn" id="pins-toggle" role="menuitemcheckbox"><span class="ic">📌</span><span>My pins</span></button>
+    <div class="grp-title">Map data</div>
+    <button class="mbtn" id="trace-toggle"><span class="ic">🛰️</span><span>Contribute to the map…</span></button>
+  </div>
+
+  <!-- EXPLORE: search + favorites + primary actions -->
+  <div id="searchbar">
+    <label for="search-input" class="visually-hidden">Search place or road</label>
+    <span class="search-ico">🔍</span>
+    <input id="search-input" type="text" placeholder="Search destination…" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-owns="search-results" />
+    <button class="search-clear" id="search-clear" aria-label="Clear search">✕</button>
+    <span id="search-loading" role="status" aria-live="polite">Searching…</span>
+    <div id="search-results"></div>
+  </div>
+  <div id="favbar"></div>
+
+  <!-- Primary action bar (Explore): the two things a user wants to do -->
+  <div id="actionbar">
+    <button class="fab" id="locate-btn"><span>📍</span><span>My location</span></button>
+    <button class="fab accent" id="explore-route"><span>🧭</span><span>Route</span></button>
+  </div>
+
+  <!-- ROUTE PREVIEW (Mode B) -->
+  <div id="preview">
+    <div class="p-dest">
+      <div class="p-pin">📍</div>
+      <div style="flex:1;min-width:0;">
+        <div class="p-name" id="prev-name">Destination</div>
+        <div class="p-sub" id="prev-sub">Route options below</div>
+      </div>
+    </div>
+    <div class="p-stats">
+      <div class="p-stat"><div class="v" id="prev-dist">—</div><div class="l">Distance</div></div>
+      <div class="p-stat"><div class="v" id="prev-time">—</div><div class="l">Time</div></div>
+      <div class="p-stat"><div class="v" id="prev-traffic">—</div><div class="l">Traffic</div></div>
+    </div>
+    <div id="alt-chips" role="tablist" aria-label="Route alternatives"></div>
+    <div class="p-actions" style="margin-top:6px;">
+      <button class="btn-go" id="start-btn">▶ Start navigation</button>
+      <button class="btn-ghost" id="preview-close" title="Back">✕</button>
+    </div>
+  </div>
+
+  <!-- ACTIVE NAVIGATION (Mode C) -->
+  <div id="navhead">
+    <div class="row">
+      <div class="eta" id="nav-eta">--<small>ETA</small></div>
+      <div class="turn">
+        <span class="man" id="nav-man">↑</span>
+        <div>
+          <div class="txt" id="nav-txt">Calculating route…</div>
+          <div class="dist" id="nav-dist"></div>
+        </div>
+      </div>
+      <button class="exit" id="nav-exit">Exit</button>
+    </div>
+  </div>
+
+  <!-- Next maneuver banner -->
+  <div id="navnext">
+    <span class="man" id="navnext-man">↑</span>
+    <div class="t">
+      <div class="road" id="navnext-road">—</div>
+      <div class="then" id="navnext-then">—</div>
+    </div>
+    <span class="arrow">›</span>
+  </div>
+
+  <!-- Arrival -->
+  <div id="arrival">
+    <div class="big" id="arrival-title">You have arrived</div>
+    <div class="small" id="arrival-sub">Destination reached.</div>
+    <button id="arrival-close">Done</button>
+  </div>
+
+  <!-- speedometer -->
+  <div id="gpsbox" class="unknown" style="display:none;">
+    <div class="dial">
+      <div>
+        <div class="spd" id="gps-spd">--</div>
+        <div class="unit">km/h</div>
+      </div>
+      <div class="limit" id="gps-limit" title="Speed limit"><span id="gps-limit-val"></span></div>
+    </div>
+    <div class="meta" id="gps-meta">GPS off</div>
+  </div>
+
+  <!-- status overlays -->
+  <div id="progress-overlay" role="status" aria-live="polite"><span class="spinner"></span><span id="progress-text">Loading…</span></div>
+  <div id="recalc" role="status" aria-live="polite">⟳ Recalculating route…</div>
+  <div id="toast" role="alert" aria-live="assertive"></div>
+  <div id="gps-note" role="status" aria-live="polite"></div>
+
+  <!-- built-in sheets (preserve original IDs; styled in new design) -->
+  <div id="pinsbar" class="pill">
+    <div class="head"><b>My pins</b><span class="close" id="pins-close">✕</span></div>
+    <div class="hint">Long-press the map to drop a pin.</div>
+    <ol id="pins-list"></ol>
+    <button id="pins-clear">Clear all pins</button>
+  </div>
+  <div id="steps">
+    <div class="head"><b>Directions</b><span class="close" id="steps-close">✕</span></div>
+    <ol id="steps-list"></ol>
+  </div>
+  <div id="along-results"></div>
+  <div id="stops-list"></div>
+
+  <div id="reportbar" class="pill">
+    <span>Tap the map to drop a hazard.</span>
+    <select id="report-kind">
+      <option value="hazard">Hazard</option>
+      <option value="closure">Road closure</option>
+      <option value="accident">Accident</option>
+      <option value="police">Police</option>
+    </select>
+    <button id="report-cancel">Cancel</button>
+  </div>
+
+  <div id="pin-modal" role="dialog" aria-modal="true" aria-label="Name this pin" style="display:none;position:absolute;z-index:6;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);">
+    <div class="sheet">
+      <div id="pin-modal-title" style="color:var(--txt);font:14px/1.3 system-ui,sans-serif;margin-bottom:10px;">Name this pin</div>
+      <input id="pin-modal-input" type="text" autocomplete="off" style="width:100%;box-sizing:border-box;padding:10px 12px;font:14px/1.2 system-ui,sans-serif;border-radius:8px;border:1px solid var(--line);background:var(--bg-elev);color:var(--txt);outline:none;" />
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;">
+        <button id="pin-modal-cancel" style="background:var(--bg-elev);color:var(--txt);border:1px solid var(--line);border-radius:6px;padding:8px 14px;cursor:pointer;font:13px system-ui,sans-serif;">Cancel</button>
+        <button id="pin-modal-save" style="background:var(--accent);border-color:var(--accent);color:#fff;border-radius:6px;padding:8px 14px;cursor:pointer;font:13px system-ui,sans-serif;">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="consent" style="display:none;">
+    <div class="sheet">
+      <h2>Help the map learn?</h2>
+      <p>Vector can improve its routing from how you actually drive. It is
+         <strong>off unless you turn it on</strong>, and you can stop it at any time.</p>
+      <h3>What is stored</h3>
+      <ul>
+        <li>Aggregate speeds per stretch of road, per time of week.</li>
+        <li>Nothing until <strong>at least 5 separate trips</strong> cover the same
+            stretch in the same time band. Below that, the data is deleted unused.</li>
+      </ul>
+      <h3>What is never stored</h3>
+      <ul>
+        <li>Your identity, account, device or IP — there is no user record at all.</li>
+        <li>The start and end of every trip: the first and last 200&nbsp;m are
+            discarded on your device, so your home and work are not in the data.</li>
+        <li>Raw positions beyond <strong>72&nbsp;hours</strong> — they are deleted,
+            not archived. Only the aggregates survive, and those describe roads,
+            not people.</li>
+        <li>Anything linking one trip to another: each trip gets a fresh random
+            label that is thrown away when the trip ends.</li>
+      </ul>
+      <p class="check">Don't take our word for it —
+        <a href="/privacy-counters" target="_blank" rel="noopener">see what has been discarded</a>
+        and <a href="/evolution" target="_blank" rel="noopener">what the map has learned</a>.
+        Both are live.</p>
+      <p class="check">Recording in this tab needs the screen on and the tab in
+        front — a web page cannot record in the background.
+        <a id="consent-collect-link" href="/collect">Other ways to contribute</a>,
+        including uploading a drive your phone already recorded, which needs none
+        of that.</p>
+      <div class="actions">
+        <button id="consent-no" class="ghost">No thanks</button>
+        <button id="consent-yes" class="primary">Turn on contributing</button>
+      </div>
+      <p class="fine">You can change this later with the same button. Turning it off
+         stops collection immediately; aggregates already contributed cannot be traced
+         back to you, so there is nothing about you left to delete.</p>
+    </div>
+  </div>
+
+  <!-- LEGACY PANEL: kept for backend wiring (hidden; its buttons live in #more-sheet).
+       We keep the original IDs (route-toggle, route-clear, traffic-status, info, info2,
+       voice-status, tracebar, trace-* …) so the existing <script> keeps working. -->
+  <div id="panel" style="display:none;">
+    <button id="route-toggle">Route mode</button>
+    <button id="route-clear">Clear</button>
+    <div id="info"></div>
+    <div id="info2" style="display:none;"></div>
+    <span id="traffic-status" style="display:none;"></span>
+  </div>
+  <div id="topbar" style="display:none;"><div id="info-legacy"></div></div>
+  <div id="voice-status" style="display:none;"><div class="on" id="voice-label">Voice ON</div></div>
+  <div id="tracebar" style="display:none;">
+    <span class="status" id="trace-status">Recording</span>
+    <span class="dots" id="trace-dots">● ● ●</span>
+    <span id="trace-count">0 pts</span>
+    <button id="trace-stop" class="stop">Stop</button>
+    <button id="trace-upload">Upload</button>
+    <button id="trace-off" title="Stop contributing entirely and forget the choice">Turn off</button>
+  </div>
+
+@@include /tmp/orig_script.html
+</body>
+</html>

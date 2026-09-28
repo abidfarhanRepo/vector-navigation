@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- NO ACCESS_BACKGROUND_LOCATION: out of scope for the first release,
+         carried forward from ADR-0070's guardrail (see ADR-0075 Compliance). -->
+
+    <!-- Android Auto. Both are install-time permissions defined by the Auto
+         host, not runtime prompts. NAVIGATION_TEMPLATES is what allows
+         NavigationTemplate to be used at all; ACCESS_SURFACE is the car's
+         drawing surface, which the map work needs and which a navigation app
+         is expected to hold.
+
+         NOT declared: androidx.car.app.MAP_TEMPLATES, which is for POI-category
+         apps using PlaceListMapTemplate. Google's own guidance is that a
+         navigation app drawing its own map does not need it, and that
+         declaring a template permission outside the app's category is grounds
+         for rejection — so it is an active risk rather than harmless noise.
+
+         Also NOT declared: android.hardware.type.automotive. That is the
+         Android Automotive OS (car-native) contract, and with required="true"
+         it would restrict distribution to vehicles. Vector projects from a
+         phone. -->
+    <uses-permission android:name="androidx.car.app.NAVIGATION_TEMPLATES" />
+    <uses-permission android:name="androidx.car.app.ACCESS_SURFACE" />
+
+    <uses-feature android:glEsVersion="0x00030000" android:required="true" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Vector"
+        android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:theme="@style/Theme.Vector.Splash">
+
+        <!-- windowSoftInputMode="adjustResize", together with
+             setDecorFitsSystemWindows(false), is what makes the IME report its
+             insets to Compose. Without it the soft keyboard covers the search
+             results it was opened in order to filter. -->
+        <!-- launchMode="singleTop" so a second `am start` on the running app
+             is delivered to onNewIntent rather than creating a second
+             instance. The device driving harness launches the app, waits for
+             the map to settle, and only then hands it a trace; without this
+             the trace intent is dropped and the harness measures a parked
+             phone. -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="unspecified"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden|uiMode|density"
+            android:theme="@style/Theme.Vector">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Android Auto. The NAVIGATION category is what lists Vector among
+             the car's navigation apps and unlocks the navigation templates. -->
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+        <!-- Declared explicitly, and this is not optional in practice: with
+             the tag absent the library assumes the app can only handle the
+             API level it was COMPILED against (8 for car-app 1.7.0), which
+             silently refuses every older head unit. Vector uses level-1 APIs
+             only — NavigationTemplate, ListTemplate, MessageTemplate — so 1 is
+             the honest floor. Raise it to 7 if MapWithContentTemplate is ever
+             used unguarded. -->
+        <meta-data
+            android:name="androidx.car.app.minCarApiLevel"
+            android:value="1" />
+
+        <service
+            android:name=".car.VectorCarAppService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="androidx.car.app.CarAppService" />
+                <category android:name="androidx.car.app.category.NAVIGATION" />
+            </intent-filter>
+        </service>
+    </application>
+</manifest>

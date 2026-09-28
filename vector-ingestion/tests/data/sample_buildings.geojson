@@ -1,0 +1,458 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "poi-brandenburg-gate",
+      "properties": { "name": "Brandenburg Gate", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.3777, 52.5163] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-tv-tower",
+      "properties": { "name": "TV Tower", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.4094, 52.5208] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-charite",
+      "properties": { "name": "Charite", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [-240.0, 52.5265] }
+    },
+    {
+      "type": "Feature",
+      "id": "park-tiergarten",
+      "properties": { "name": "Tiergarten", "kind": "park" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3390, 52.5060],
+            [13.3510, 52.5300],
+            [13.3730, 52.5260],
+            [13.3500, 52.5040],
+            [13.3390, 52.5060]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-reichstag",
+      "properties": { "name": "Reichstag", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.3766, 52.5186] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-berlin-cathedral",
+      "properties": { "name": "Berlin Cathedral", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.3989, 52.5199] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-checkpoint-charlie",
+      "properties": { "name": "Checkpoint Charlie", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.3906, 52.5074] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-potsdamer-platz",
+      "properties": { "name": "Potsdamer Platz", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.3746, 52.5096] }
+    },
+    {
+      "type": "Feature",
+      "id": "poi-alexanderplatz",
+      "properties": { "name": "Alexanderplatz", "kind": "poi" },
+      "geometry": { "type": "Point", "coordinates": [13.4132, 52.5219] }
+    },
+    {
+      "type": "Feature",
+      "id": "park-treptower",
+      "properties": { "name": "Treptower Park", "kind": "park" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.4570, 52.4970],
+            [13.4710, 52.5010],
+            [13.4670, 52.4880],
+            [13.4530, 52.4930],
+            [13.4570, 52.4970]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "district-mitte",
+      "properties": { "name": "Mitte", "kind": "district" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3630, 52.5250],
+            [13.4160, 52.5270],
+            [13.4190, 52.5030],
+            [13.3640, 52.5010],
+            [13.3630, 52.5250]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route-stresemannstrasse",
+      "properties": { "name": "Stresemannstrasse", "kind": "route" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [13.3720, 52.5040],
+          [13.3800, 52.5060],
+          [13.3890, 52.5070],
+          [13.3980, 52.5060]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b01",
+      "properties": { "name": "Haus Unter den Linden 1", "kind": "building", "height": 25.0, "min_height": 3.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3773, 52.5093],
+            [13.3773, 52.5107],
+            [13.3787, 52.5107],
+            [13.3787, 52.5093],
+            [13.3773, 52.5093]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b02",
+      "properties": { "name": "Haus Unter den Linden 2", "kind": "building", "height": 42.5 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3788, 52.5113],
+            [13.3788, 52.5127],
+            [13.3802, 52.5127],
+            [13.3802, 52.5113],
+            [13.3788, 52.5113]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b03",
+      "properties": { "name": "Friedrichstrasse Pavilion", "kind": "building", "height": 18.0, "min_height": 5.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3803, 52.5133],
+            [13.3803, 52.5147],
+            [13.3817, 52.5147],
+            [13.3817, 52.5133],
+            [13.3803, 52.5133]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b04",
+      "properties": { "name": "Potsdamer Tower", "kind": "building", "height": 55.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3818, 52.5103],
+            [13.3818, 52.5117],
+            [13.3832, 52.5117],
+            [13.3832, 52.5103],
+            [13.3818, 52.5103]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b05",
+      "properties": { "name": "Leipziger Platz Block", "kind": "building", "height": 33.0, "min_height": 2.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3833, 52.5128],
+            [13.3833, 52.5142],
+            [13.3847, 52.5142],
+            [13.3847, 52.5128],
+            [13.3833, 52.5128]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b06",
+      "properties": { "name": "Mitte Hochhaus", "kind": "building", "height": 68.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3848, 52.5148],
+            [13.3848, 52.5162],
+            [13.3862, 52.5162],
+            [13.3862, 52.5148],
+            [13.3848, 52.5148]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b07",
+      "properties": { "name": "Scheunenviertel Haus", "kind": "building", "height": 12.5, "min_height": 1.5 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3863, 52.5118],
+            [13.3863, 52.5132],
+            [13.3877, 52.5132],
+            [13.3877, 52.5118],
+            [13.3863, 52.5118]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b08",
+      "properties": { "name": "Alexanderplatz Turm", "kind": "building", "height": 80.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3878, 52.5138],
+            [13.3878, 52.5152],
+            [13.3892, 52.5152],
+            [13.3892, 52.5138],
+            [13.3878, 52.5138]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b09",
+      "properties": { "name": "Spreeufer Gebaeude", "kind": "building", "height": 47.0, "min_height": 4.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3893, 52.5108],
+            [13.3893, 52.5122],
+            [13.3907, 52.5122],
+            [13.3907, 52.5108],
+            [13.3893, 52.5108]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b10",
+      "properties": { "name": "Museumsinsel Fluegel", "kind": "building", "height": 29.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3908, 52.5123],
+            [13.3908, 52.5137],
+            [13.3922, 52.5137],
+            [13.3922, 52.5123],
+            [13.3908, 52.5123]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b11",
+      "properties": { "name": "Wilhelmstrasse Amt", "kind": "building", "height": 36.0, "min_height": 3.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3773, 52.5173],
+            [13.3773, 52.5187],
+            [13.3787, 52.5187],
+            [13.3787, 52.5173],
+            [13.3773, 52.5173]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b12",
+      "properties": { "name": "Regierungsviertel Trakt", "kind": "building", "height": 60.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3788, 52.5193],
+            [13.3788, 52.5207],
+            [13.3802, 52.5207],
+            [13.3802, 52.5193],
+            [13.3788, 52.5193]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b13",
+      "properties": { "name": "Bahnhofstrasse Halle", "kind": "building", "height": 22.0, "min_height": 2.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3803, 52.5213],
+            [13.3803, 52.5227],
+            [13.3817, 52.5227],
+            [13.3817, 52.5213],
+            [13.3803, 52.5213]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b14",
+      "properties": { "name": "Torstrasse Block", "kind": "building", "height": 51.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3818, 52.5183],
+            [13.3818, 52.5197],
+            [13.3832, 52.5197],
+            [13.3832, 52.5183],
+            [13.3818, 52.5183]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b15",
+      "properties": { "name": "Hackescher Markt", "kind": "building", "height": 15.0, "min_height": 1.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3833, 52.5203],
+            [13.3833, 52.5217],
+            [13.3847, 52.5217],
+            [13.3847, 52.5203],
+            [13.3833, 52.5203]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b16",
+      "properties": { "name": "Karl-Marx-Allee Turm", "kind": "building", "height": 74.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3848, 52.5178],
+            [13.3848, 52.5192],
+            [13.3862, 52.5192],
+            [13.3862, 52.5178],
+            [13.3848, 52.5178]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b17",
+      "properties": { "name": "Rosenthaler Haus", "kind": "building", "height": 41.0, "min_height": 3.5 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3863, 52.5198],
+            [13.3863, 52.5212],
+            [13.3877, 52.5212],
+            [13.3877, 52.5198],
+            [13.3863, 52.5198]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b18",
+      "properties": { "name": "Oranienburger Kirche", "kind": "building", "height": 28.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3878, 52.5168],
+            [13.3878, 52.5182],
+            [13.3892, 52.5182],
+            [13.3892, 52.5168],
+            [13.3878, 52.5168]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b19",
+      "properties": { "name": "Weidendammer Bogen", "kind": "building", "height": 64.0, "min_height": 5.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3893, 52.5188],
+            [13.3893, 52.5202],
+            [13.3907, 52.5202],
+            [13.3907, 52.5188],
+            [13.3893, 52.5188]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-b20",
+      "properties": { "name": "Friedrichshain Kapelle", "kind": "building", "height": 38.0 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.3908, 52.5153],
+            [13.3908, 52.5167],
+            [13.3922, 52.5167],
+            [13.3922, 52.5153],
+            [13.3908, 52.5153]
+          ]
+        ]
+      }
+    }
+  ]
+}

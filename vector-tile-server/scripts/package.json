@@ -1,0 +1,13 @@
+{
+  "name": "vector-glyphs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MapLibre glyph PBF generator for Vector basemap labels (fontnik-based)",
+  "type": "module",
+  "scripts": {
+    "generate": "node generate_glyphs.mjs"
+  },
+  "dependencies": {
+    "fontnik": "^0.7.7"
+  }
+}

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vector_map_store"
+version = "0.1.0"
+description = "Vector — vector-map-store"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+vector-map_store-health = "vector_map_store.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vector_map_store"]

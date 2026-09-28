@@ -1,0 +1,13 @@
+{
+  "name": "vector-auth",
+  "version": "1.0.0",
+  "description": "Vector — shared service-layer HTTP auth (bearer token + scoped CORS)",
+  "private": true,
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "npm run validate && PYTHONPATH=src python -m unittest discover -s tests"
+  },
+  "devDependencies": {
+    "yaml": "^1.10.0"
+  }
+}

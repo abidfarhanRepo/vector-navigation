@@ -1,0 +1,60 @@
+# ============================================================================
+# CI specification — VECTOR LOCAL CI (self-hosted, no GitHub Actions)
+# GitHub Actions is NOT available in this environment. This file is the
+# canonical CI definition and is executed locally via `act` (Docker) by the
+# workspace-root orchestrator `run-ci.mjs`. See /CI.md for how to run.
+# Do NOT rely on the GitHub Actions service; use `npm run ci` from the
+# workspace root.
+# ============================================================================
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # JDK 21, provisioned here rather than inherited from the image. This
+      # project was developed on Fedora 44, which ships only OpenJDK 25 and
+      # Gradle 8.14 rejects it — which is why README.md's Build section keeps
+      # the toolchain outside the package manager there. AGP 8.x wants 17 or
+      # above; 21 is the LTS both accept.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      # LOAD-BEARING. The workspace CI image has NO Android SDK today, and the
+      # orchestrator passes none: without the two steps below, every `:app:`
+      # task fails at configuration time with "SDK location not found".
+      #
+      # This also exports ANDROID_HOME / ANDROID_SDK_ROOT, which is where Gradle
+      # has to resolve the SDK from here: `local.properties` is gitignored and
+      # therefore absent after checkout, and a developer's own copy of it names
+      # a path that does not exist inside the container.
+      - uses: android-actions/setup-android@v3
+      - name: Install platform 35 and build-tools 35.0.0
+        run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
+
+      # Gradle caching: dependency + build caches, keyed on the wrapper. An
+      # uncached `:app:` compile is minutes every run, and the wrapper would
+      # otherwise re-download gradle-8.14.3-all.zip on each one.
+      - uses: gradle/actions/setup-gradle@v4
+
+      # No emulator, deliberately, and none is required below.
+      #
+      # The first two gates are JVM-only: `:core-geo:test` is pure navigation
+      # maths with no Android types at all, and `:app:testDebugUnitTest` runs
+      # the Compose UI tests under Robolectric, which needs no device. The last
+      # two only have to compile, lint and package. The one gate that does need
+      # a running device is `scripts/verify_on_device.sh`, and it is run by
+      # `scripts/verify-all.sh` (gate 7) on a machine that has one — reported
+      # there as a SKIP, not a failure, when nothing is attached.
+      - run: ./gradlew :core-geo:test
+      - run: ./gradlew :app:testDebugUnitTest
+      - run: ./gradlew :app:lintDebug
+      - run: ./gradlew :app:assembleDebug

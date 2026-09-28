@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Night window theme.
+
+  The dark theme is **designed, not inverted**: this is not the light file with
+  its colours swapped. Two things differ structurally rather than cosmetically.
+
+  * The bars want LIGHT icons (`windowLightStatusBar=false`), because the field
+    is a charcoal and the icons are composited directly over it.
+  * The splash keeps the same mark, because a launch mark that changes colour
+    with the system setting is two brands.
+
+  `postSplashScreenTheme` still points at `Theme.Vector`, which resolves to THIS
+  file's variant on a device in night mode — the platform resolves the resource,
+  so there is no branch to get wrong.
+-->
+<resources>
+
+    <style name="Theme.Vector" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/vector_field</item>
+        <item name="android:colorBackground">@color/vector_field</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Vector.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/vector_field</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_mark</item>
+        <item name="postSplashScreenTheme">@style/Theme.Vector</item>
+    </style>
+</resources>

@@ -1,0 +1,32 @@
+# ============================================================================
+# CI specification — VECTOR LOCAL CI (self-hosted, no GitHub Actions)
+# GitHub Actions is NOT available in this environment. This file is the
+# canonical CI definition and is executed locally via `act` (Docker) by the
+# workspace-root orchestrator `run-ci.mjs`. See /CI.md for how to run.
+# Do NOT rely on the GitHub Actions service; use `npm run ci` from the
+# workspace root (C:\Users\PC\Desktop\Vector).
+# ============================================================================
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: npm run validate
+      - run: npm test
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Vendor drift check (vector_auth / vector_bus_client)
+        run: python3 scripts/check_vendor.py
+      - name: Python health/unit tests
+        run: PYTHONPATH=src:vendor python -m unittest discover -s tests -v

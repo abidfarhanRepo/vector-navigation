@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Language build artifacts
+__pycache__/
+*.pyc
+target/
+dist/
+*.tsbuildinfo
+
+# Secrets (never commit)
+.env
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Large generated extract (canonical home: vector-osrm/data/qatar.geojson)
+qatar.geojson

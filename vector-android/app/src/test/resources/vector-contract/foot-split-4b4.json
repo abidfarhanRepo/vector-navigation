@@ -1,0 +1,1 @@
+{"error": "no walking route found between the requested points", "reason": "pedestrian_network_split", "message": "no walking route: these points are on separate pedestrian networks (no component within 400 m contains both; nearest walkable node is 0 m from the origin and 0 m from the destination)", "origin_snap_m": 0.0, "destination_snap_m": 0.0, "radius_m": 400.0}

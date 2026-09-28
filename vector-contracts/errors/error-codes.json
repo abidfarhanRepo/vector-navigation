@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "description": "Centralized error codes (Bible §16 typed errors, Blueprint envelope). Categories map to HTTP status. Retryable guides client backoff (Bible §16 ER4).",
+  "codes": [
+    { "code": "VEC-0001", "http": 400, "category": "validation",    "message": "Invalid request payload",            "retryable": false },
+    { "code": "VEC-0002", "http": 401, "category": "auth",          "message": "Missing or invalid credential",      "retryable": false },
+    { "code": "VEC-0003", "http": 403, "category": "auth",          "message": "Insufficient scope",                 "retryable": false },
+    { "code": "VEC-0004", "http": 404, "category": "not_found",     "message": "Resource not found",                 "retryable": false },
+    { "code": "VEC-0005", "http": 409, "category": "conflict",      "message": "Resource conflict",                  "retryable": false },
+    { "code": "VEC-0006", "http": 422, "category": "validation",    "message": "Semantic validation failed",         "retryable": false },
+    { "code": "VEC-0500", "http": 500, "category": "internal",      "message": "Internal error",                     "retryable": true  },
+    { "code": "VEC-0501", "http": 503, "category": "unavailable",   "message": "Service unavailable",                "retryable": true  },
+    { "code": "VEC-0502", "http": 504, "category": "timeout",       "message": "Upstream timeout",                   "retryable": true  }
+  ]
+}

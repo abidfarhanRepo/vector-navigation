@@ -1,0 +1,20 @@
+Vector Android JVM test suites — 1,790 tests, 0 failures
+Recorded 2026-09-28 over this tree (versionName 1.0, versionCode 1).
+No device and no emulator required; both suites are plain JVM unit tests.
+
+== :app       1,115 tests, 0 failures
+== :core-geo    675 tests, 0 failures
+   total      1,790 tests, 0 failures
+
+Reproduce:
+  cd vector-android && ./gradlew :app:testDebugUnitTest :core-geo:test
+
+Provenance:
+  * Counts were read from the on-disk JUnit XML of those two tasks on
+    2026-09-28, not from a console transcript; the per-class breakdown is
+    not reproduced here.
+  * It supersedes the version of this file recorded 2026-09-24, which read
+    :app 1,083 and totalled 1,758, and the version committed on 2026-09-20
+    (:app 988, :core-geo 637, 1,625 total). The :app suite grew after the
+    2026-09-24 record; :core-geo has been 675 since 2026-09-20.
+  * Run the command above to reproduce them yourself.

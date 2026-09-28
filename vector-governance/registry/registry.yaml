@@ -1,0 +1,837 @@
+version: 1
+# vector-governance/registry/registry.yaml
+# Single source of truth for repo->squad, service->repo, and dependency edges (Blueprint §11, Bible §8 R6/R7).
+# Any new repo MUST be registered here and mirrored as a node in kg/index.json.
+
+squads:
+  - id: d1-platform
+    name: Platform & Infrastructure
+  - id: d3-architecture
+    name: Architecture & Standards
+  - id: d7-docs
+    name: Documentation & Knowledge
+  - id: d8-research
+    name: Research & Innovation
+  - id: d2-product
+    name: Product Engineering
+  - id: d2-web
+    name: Web & Frontend Engineering
+  - id: d6-data
+    name: Data & ML Engineering
+  - id: d9-ops
+    name: Operations & Release
+  - id: d5-security
+    name: Security & Compliance
+
+repos:
+  - id: vector-governance
+    owner_squad: d7-docs
+    secondary_squads: [d3-architecture]
+    primary_lang: markdown
+    purpose: Constitution, ADRs, registry, v1 Knowledge Graph index.
+  - id: vector-contracts
+    owner_squad: d3-architecture
+    secondary_squads: [d1-platform]
+    primary_lang: spec
+    purpose: Language-neutral shared contracts (OpenAPI/Protobuf/JSON Schema/events/DTOs/error codes).
+  - id: vector-common
+    owner_squad: d3-architecture
+    secondary_squads: [d1-platform]
+    primary_lang: typescript
+    purpose: Shared domain models, geometry, coordinates, identifiers, errors, utilities (Node/TS tier).
+  - id: vector-playground
+    owner_squad: d8-research
+    secondary_squads: [d3-architecture]
+    primary_lang: typescript
+    purpose: Prototypes, benchmarks, PoCs, experiments. Never production.
+
+  - id: vector-auth
+    owner_squad: d5-security
+    secondary_squads: [d3-architecture]
+    primary_lang: python
+    purpose: Shared service-layer HTTP auth (bearer-token enforcement + scoped CORS) for engine HTTP services. Vendored into consuming engines (adr-0007).
+
+  - id: vector-bus-client
+    owner_squad: d3-architecture
+    secondary_squads: [d5-security]
+    primary_lang: python
+    purpose: Shared event-bus client (LocalBus + NetworkBusClient) for Python engines. Single source of truth, vendored into consuming engines (adr-0007, adr-0051). Replaces per-engine duplicated bus clients.
+
+  - id: vector-web
+    owner_squad: d2-web
+    secondary_squads: [d3-architecture, d5-security]
+    primary_lang: python
+    purpose: Web composition root (MapLibre M1 viewer + proxy to routing/traffic behind one authenticated origin). Closes the CORS gap and presents the engines to the browser as a single edge (adr-0052, Wave 26e).
+
+  - id: vector-ingestion
+    owner_squad: d6-data
+    secondary_squads: [d3-architecture]
+    primary_lang: python
+    purpose: Ingests raw geographic/map source data and normalizes it to Vector contract shapes (Coordinate/BoundingBox/Tile).
+  - id: vector-map-store
+    owner_squad: d2-product
+    secondary_squads: [d1-platform]
+    primary_lang: python
+    purpose: Persistence + query of normalized map features (Coordinate/BoundingBox). Serves map-store reads to tile-gen.
+  - id: vector-tile-gen
+    owner_squad: d2-product
+    secondary_squads: [d3-architecture]
+    primary_lang: python
+    purpose: Generates vector tiles (Tile schema, mvt/pbf) from map-store. Feeds tile-server.
+  - id: vector-osrm
+    owner_squad: d2-product
+    secondary_squads: [d6-data]
+    primary_lang: shell
+    purpose: Real-Qatar data + local-run pipeline (scripts/run_stack.sh). Holds the baked qatar.geojson, pre-baked MVT tiles, dynamic tile cache, and OSRM extract that the all-Python dev stack serves. Data dirs (data/qatar.geojson, data/tiles, data/tiles-dyn, data/osrm) are gitignored — only scripts/run_stack.sh and fetch scripts are version controlled.
+  - id: vector-tile-server
+    owner_squad: d2-product
+    secondary_squads: [d3-architecture]
+    primary_lang: rust
+    purpose: Rust engine serving generated vector tiles over HTTP (health endpoint + tile API). Proves engine toolchain.
+  - id: vector-infra
+    owner_squad: d1-platform
+    secondary_squads: [d9-ops]
+    primary_lang: markdown
+    purpose: Infrastructure-as-code strategy, runbooks, and deployment topology for the Vector product fleet (markdown-only skeleton in S0).
+
+  - id: vector-registry
+    owner_squad: d1-platform
+    secondary_squads: [d3-architecture]
+    primary_lang: typescript
+    purpose: E9 Registry & Ownership — single source of truth for repo→squad, service→repo, and dependency edges; CODEOWNERS enforcement; blast-radius dependency graph.
+  - id: vector-bus
+    owner_squad: d1-platform
+    secondary_squads: []
+    primary_lang: typescript
+    purpose: E2 Communication & Event Backbone — async pub/sub (5 channels), envelope validation, SLA-aware channel routing for the Vector agent fleet.
+  - id: vector-kg-graph
+    owner_squad: d7-docs
+    secondary_squads: [d3-architecture]
+    primary_lang: typescript
+    purpose: E3 Knowledge Graph — graph store + vector index (services kg-graph-svc, kg-vector-svc); versioned labeled property graph with append-only node versioning and kg://id-keyed cosine similarity.
+  - id: vector-kg-ingest
+    owner_squad: d7-docs
+    secondary_squads: [d3-architecture]
+    primary_lang: typescript
+    purpose: E3 Knowledge Graph ingestion — ingest/retrieval/reconcile modules; subscribes to vector-bus (#events/#escalations/#contracts) and writes nodes/edges with provenance + confidence; reconciles registry↔KG.
+
+  - id: vector-coa-fleet
+    owner_squad: d1-platform
+    secondary_squads: [d3-architecture]
+    primary_lang: typescript
+    purpose: E1 Agent Orchestration Core — Fleet Control Plane (scheduler, priority queue, autoscaler); consumes E2 Bus by DI.
+  - id: vector-coa-runtime
+    owner_squad: d3-architecture
+    secondary_squads: [d1-platform]
+    primary_lang: typescript
+    purpose: E1 Agent Orchestration Core — Orchestrator Runtime (planner, decomposer, arbiter, review-router); consumes E2 Bus + E9 Registry + E4 gates by DI.
+  - id: vector-ci
+    owner_squad: d1-platform
+    secondary_squads: [d3-architecture]
+    primary_lang: typescript
+    purpose: E4 Engineering Gates & CI/CD — runtime ci-svc (engine + quality/license/security gates); consumes E2 Bus by DI.
+  - id: vector-security
+    owner_squad: d5-security
+    secondary_squads: [d1-platform]
+    primary_lang: typescript
+    purpose: E5 Security & Compliance Platform — vault-svc (token-broker), audit-log, threat-intel; exports createE5SecurityScanner() satisfying E4's setE5Scanner contract; consumes E2 Bus by DI.
+  - id: vector-observability
+    owner_squad: d1-platform
+    secondary_squads: [d9-ops]
+    primary_lang: typescript
+    purpose: E6 Observability & Reliability — otel-svc (metrics/logs/traces + alert-mgr); golden signals, structured logs with correlation IDs, distributed tracing (100% error retention), SLOs/error budgets and actionable alerts; consumes E2 Bus + E9 Registry + E3 KG by DI.
+
+  - id: vector-agents
+    owner_squad: d1-platform
+    secondary_squads: [d8-research]
+    primary_lang: typescript
+    purpose: E7 Department Agent Frameworks — agents-svc (worker-fw stateless worker, dma-fw DMA/provisioning/RACI, sla-fw SLA monitoring, research-pipeline D8 Read→Extract→Analyze→Synthesize→KG-Writer); consumes E2 Bus + E9 Registry + E3 KG by DI.
+  - id: vector-docs
+    owner_squad: d7-docs
+    secondary_squads: []
+    primary_lang: typescript
+    purpose: E8 Documentation & Knowledge Tooling — docs-svc (doc-lint staleness checker, adr-tool ADR format/supersede/KG-index, kg-portal KG query facade); consumes E2 Bus + E9 Registry + E3 KG by DI.
+  - id: vector-routing
+    owner_squad: d2-product
+    secondary_squads: [d6-data]
+    primary_lang: python
+    purpose: M2 Navigation/Routing engine — builds a routing graph from GeoJSON way features and computes shortest paths (Dijkstra/A*); RoutingService facade + Route result; self-contained Python (no sibling imports). E2 bus consumer (VECTOR_BUS_URL-gated) for navigation tasks/results over :8090.
+  - id: vector-logistics
+    owner_squad: d2-product
+    secondary_squads: [d6-data]
+    primary_lang: python
+    purpose: M28 Multi-stop logistics routing engine — E2 bus consumer for multi-stop logistics request/result tasks over :8090; multi-vehicle VRP-lite (fleet size, depots, balanced/nearest-depot assignment, per-vehicle routes, adr-0045) extended IN PLACE to Capacitated VRP (CVRP, adr-0046) with optional per-vehicle `capacities` + per-stop `demands` and capacity-aware sweep / nearest-depot assignment, each route carrying per-vehicle `load`; `vehicles==1` & no-`capacities` unchanged; also HTTP /logistics on :8088 (behind tile-server nginx :8080); self-contained stdlib-only Python (no sibling imports, no external solver). Agent address agent://logistics.vector-01.
+  - id: vector-vision
+    owner_squad: d2-product
+    secondary_squads: [d6-data]
+    primary_lang: python
+    purpose: M3 Computer Vision engine — extracts georeferenced map features from imagery via a classic CV pipeline (grayscale/blur/threshold/edge → connected-component blob detection → georeference to GeoJSON); self-contained stdlib-only Python (no sibling imports).
+  - id: vector-reconstruction
+    owner_squad: d2-product
+    secondary_squads: [d6-data]
+    primary_lang: python
+    purpose: Road Reconstruction engine (roadmap phase 5) — reconstructs road centerlines (LineString network) from sparse road observations (GPS/probe points) and/or GeoJSON way features into a RoadGraph; self-contained Python (no sibling imports).
+  - id: vector-traffic
+    owner_squad: d2-product
+    secondary_squads: [d6-data]
+    primary_lang: python
+    purpose: Crowdsourced traffic engine (roadmap phase 6) — estimates per-segment speed and congestion (free/light/moderate/heavy/jammed) from crowdsourced GPS probe points over a road network (RoadSegments); self-contained Python (no sibling imports).
+  - id: vector-offline-maps
+    owner_squad: d2-product
+    secondary_squads: [d6-data]
+    primary_lang: python
+    purpose: Offline maps engine (roadmap phase 7) — estimates offline package tile counts and download size from a bbox over a zoom range and maintains a region registry; self-contained Python (no sibling imports).
+  - id: vector-hdmaps
+    owner_squad: d2-product
+    secondary_squads: [d6-data]
+    primary_lang: python
+    purpose: HD maps engine (roadmap phase 8) — models lanes as directed polylines with type/speed/width + a LaneGraph topology and emits GeoJSON lane LineStrings; self-contained Python (no sibling imports).
+  - id: vector-global
+    owner_squad: d2-product
+    secondary_squads: [d6-data]
+    primary_lang: python
+    purpose: Global basemap engine (roadmap phase 9) — maintains a worldwide region catalog and serves region Polygons (GeoJSON) by bbox/tier for the live global overlay; self-contained Python (no sibling imports).
+  - id: vector-geo
+    owner_squad: d3-architecture
+    secondary_squads: [d1-platform]
+    primary_lang: python
+    purpose: Shared Python geospatial domain models (haversine, geometry, RoutingGraph, dijkstra/astar, routing errors) — the single source of truth that vector-routing and vector-logistics vendor via vendor/vector_geo (ADR-0007 Python counterpart to vector-common). Stdlib-only.
+
+  - id: vector-geocoder
+    owner_squad: d2-product
+    secondary_squads: [d6-data]
+    primary_lang: python
+    purpose: M-Search self-hosted geocoder — indexes real OSM-derived place labels + named roads and serves /search?q= as GeoJSON (no Nominatim/Google). Inverted substring index over feature names; consumed by the web client for address/POI search.
+  - id: vector-privacy
+    owner_squad: d5-security
+    secondary_squads: [d3-architecture]
+    primary_lang: python
+    purpose: Privacy gate library (issue 01, adr-0065) — the single pure, total definition of the location-data privacy rules (accuracy floor, endpoint truncation, temporal coarsening, coordinate precision, per-trip pseudonym). Vendored into vector-web (S1 ingest gate) and vector-learning (S3 aggregate) so ingest and aggregation share one rule definition.
+
+  - id: vector-learning
+    owner_squad: d6-data
+    secondary_squads: [d5-security, d3-architecture]
+    primary_lang: python
+    purpose: Self-evolving map aggregation engine (issue 05, adr-0065) — reads the vector-web quarantine store via its R*Tree nearby() primitive, map-matches tracks onto the routable road network with a candidate-set search (not an O(NxM) scan), and emits aggregate-only segment_evidence rows + candidate facts. K=5 anonymity floor is binding and not configurable below; raw GPS dies here and non-personal facts are born. Stdlib-only.
+
+  - id: vector-android
+    owner_squad: d2-product
+    secondary_squads: [d3-architecture]
+    primary_lang: kotlin
+    purpose: Native Android client (Kotlin + MapLibre Native, not a WebView) — consumes the shared /tiles, /glyphs, /navigate and /search contracts unchanged; the reroute maths lives in a pure-JVM core-geo module so it is unit-tested without a device (adr-0075).
+
+services:
+  - id: registry-svc
+    repo: vector-registry
+    owner_squad: d1-platform
+    purpose: E9 Registry & Ownership service (repo→squad, service→repo, dependency graph, CODEOWNERS enforcement).
+  - id: bus-svc
+    repo: vector-bus
+    owner_squad: d1-platform
+    purpose: E2 Communication & Event Backbone (async pub/sub, envelope validation, SLA-aware channel routing).
+  - id: bus-server-svc
+    repo: vector-bus
+    owner_squad: d1-platform
+    purpose: Networked E2 Event Bus server (HTTP + Server-Sent-Events, Node-stdlib-only) wrapping BusService + ChannelRouter (GET /healthz, POST /publish, GET /subscribe SSE, POST /ack); plus per-consumer NetworkBusClient DI adapters so E1/E3/E4/E5/E6/E7/E8 services communicate over the real networked bus (Docker bus-server-svc, port 8090).
+  - id: kg-graph-svc
+    repo: vector-kg-graph
+    owner_squad: d7-docs
+    purpose: E3 KG graph store — versioned labeled property graph (append-only SUPERSEDES versioning, indexes by type/owner/status/confidence/time).
+  - id: kg-vector-svc
+    repo: vector-kg-graph
+    owner_squad: d7-docs
+    purpose: E3 KG vector index — kg://id-keyed embeddings, cosine SIMILAR_TO similarity, refresh on node version.
+  - id: kg-ingest-svc
+    repo: vector-kg-ingest
+    owner_squad: d7-docs
+    purpose: E3 KG event-sourced ingest pipeline — subscribes to vector-bus, idempotent on (provenance_event,type).
+  - id: kg-retrieval-svc
+    repo: vector-kg-ingest
+    owner_squad: d7-docs
+    purpose: E3 KG hybrid retrieval API — traversal/semantic/hybrid modes returning confidence + provenance path; flags <0.4 uncertain.
+  - id: kg-reconcile-svc
+    repo: vector-kg-ingest
+    owner_squad: d7-docs
+    purpose: E3 KG registry↔KG reconciliation — flags orphans/missing owners within 24h; monitors ingestion lag <15min.
+
+  - id: coa-fleet-svc
+    repo: vector-coa-fleet
+    owner_squad: d1-platform
+    purpose: E1 Fleet Control Plane (scheduler, priority queue, autoscaler); consumes E2 Bus by DI.
+  - id: coa-runtime-svc
+    repo: vector-coa-runtime
+    owner_squad: d3-architecture
+    purpose: E1 Orchestrator Runtime (planner, decomposer, arbiter, review-router); consumes E2 Bus + E9 Registry + E4 gates by DI.
+  - id: ci-svc
+    repo: vector-ci
+    owner_squad: d1-platform
+    purpose: E4 Engineering Gates (engine + quality/license/security gates); consumes E2 Bus by DI.
+  - id: vault-svc
+    repo: vector-security
+    owner_squad: d5-security
+    purpose: E5 Secrets Vault — short-lived scoped credential broker (token-broker); consumes E2 Bus by DI.
+  - id: otel-svc
+    repo: vector-observability
+    owner_squad: d1-platform
+    purpose: E6 Telemetry & Alerting — metrics (golden signals), structured logs, distributed traces, and SLO/error-budget alert manager; consumes E2 Bus + E9 Registry + E3 KG by DI.
+
+  - id: agents-svc
+    repo: vector-agents
+    owner_squad: d1-platform
+    purpose: E7 Department Agent Frameworks (worker-fw, dma-fw, sla-fw, research-pipeline); consumes E2 Bus + E9 Registry + E3 KG by DI.
+  - id: docs-svc
+    repo: vector-docs
+    owner_squad: d7-docs
+    purpose: E8 Documentation & Knowledge Tooling (doc-lint, adr-tool, kg-portal); consumes E2 Bus + E9 Registry + E3 KG by DI.
+  - id: routing-svc
+    repo: vector-routing
+    owner_squad: d2-product
+    purpose: M2 Navigation/Routing engine (routing graph, Dijkstra/A* algorithms, RoutingService facade, Route result); self-contained Python.
+  - id: routing-http-svc
+    repo: vector-routing
+    owner_squad: d2-product
+    purpose: M2 Navigation/Routing HTTP API — serves shortest-path routes as GeoJSON over HTTP (/route) for the live map route-overlay; wraps routing-svc engine.
+  - id: navigate-http-svc
+    repo: vector-routing
+    owner_squad: d2-product
+    purpose: M2 Navigation/Routing HTTP API — serves turn-by-turn ETA navigation as GeoJSON over HTTP (/navigate) for the live map Nav panel; reuses routing-svc A* graph + duration model.
+
+  - id: logistics-svc
+    repo: vector-logistics
+    owner_squad: d2-product
+    purpose: M28 Multi-stop logistics routing engine — E2 bus consumer (agent://logistics.vector-01); subscribes to #tasks for logistics requests, computes TSP-lite / multi-vehicle VRP-lite (adr-0045) / Capacitated VRP (CVRP, adr-0046: optional per-vehicle capacities + per-stop demands, capacity-aware sweep/nearest-depot, per-vehicle load) route, publishes logistics.result on #events; VECTOR_BUS_URL-gated (LocalBus/NetworkBusClient).
+  - id: logistics-http-svc
+    repo: vector-logistics
+    owner_squad: d2-product
+    purpose: M28 Multi-stop logistics HTTP API — serves multi-stop logistics routing (single-vehicle TSP-lite / multi-vehicle VRP-lite adr-0045 / Capacitated VRP CVRP adr-0046 with per-vehicle capacities/demands + per-vehicle load) as GeoJSON over HTTP (/logistics on :8088, proxied via tile-server nginx :8080); wraps logistics-svc engine.
+  - id: vision-svc
+    repo: vector-vision
+    owner_squad: d2-product
+    purpose: M3 Computer Vision service — image → CV pipeline → connected-component detection → georeferenced GeoJSON FeatureCollection; self-contained Python.
+  - id: vision-http-svc
+    repo: vector-vision
+    owner_squad: d2-product
+    purpose: M3 Computer Vision HTTP API — serves detected georeferenced features as GeoJSON over HTTP (/detect) for the live map CV-overlay; wraps vision-svc engine.
+  - id: reconstruction-svc
+    repo: vector-reconstruction
+    owner_squad: d2-product
+    purpose: Road Reconstruction engine — reconstructs road centerlines (LineString network) from sparse road observations and GeoJSON way features into a RoadGraph; self-contained Python.
+  - id: reconstruction-http-svc
+    repo: vector-reconstruction
+    owner_squad: d2-product
+    purpose: Road Reconstruction HTTP API — serves reconstructed road centerlines (GeoJSON LineString network) over HTTP (/reconstruct) for the live map road-overlay; wraps reconstruction-svc engine.
+  - id: traffic-svc
+    repo: vector-traffic
+    owner_squad: d2-product
+    purpose: Crowdsourced traffic engine — estimates per-segment speed/congestion from GPS probe points over a road network (RoadSegment + Probe); self-contained Python.
+  - id: traffic-http-svc
+    repo: vector-traffic
+    owner_squad: d2-product
+    purpose: Crowdsourced traffic HTTP API — serves per-segment speed/congestion (GeoJSON LineString network) over HTTP (/traffic) for the live map traffic-overlay; wraps traffic-svc engine.
+
+  - id: offline-svc
+    repo: vector-offline-maps
+    owner_squad: d2-product
+    purpose: Offline maps engine — estimates offline package tile counts/size from a bbox+zoom range and maintains a region registry; self-contained Python.
+  - id: offline-http-svc
+    repo: vector-offline-maps
+    owner_squad: d2-product
+    purpose: Offline maps HTTP API — serves offline package footprints/size estimates as GeoJSON over HTTP (/offline) for the live map offline-overlay; wraps offline-svc engine.
+  - id: hd-svc
+    repo: vector-hdmaps
+    owner_squad: d2-product
+    purpose: HD maps engine — models lanes as directed polylines (Lane + LaneGraph topology) and emits GeoJSON lane LineStrings; self-contained Python.
+  - id: hd-http-svc
+    repo: vector-hdmaps
+    owner_squad: d2-product
+    purpose: HD maps HTTP API — serves lane LineStrings (GeoJSON) over HTTP (/hdmap) with bbox/lane_type filtering for the live map HD-overlay; wraps hd-svc engine.
+  - id: global-svc
+    repo: vector-global
+    owner_squad: d2-product
+    purpose: Global basemap engine — maintains a worldwide RegionCatalog and emits GeoJSON region Polygons; self-contained Python.
+  - id: global-http-svc
+    repo: vector-global
+    owner_squad: d2-product
+    purpose: Global basemap HTTP API — serves region Polygons (GeoJSON) over HTTP (/global) with bbox/tier filtering for the live global overlay; wraps global-svc engine.
+  - id: geo-svc
+    repo: vector-geo
+    owner_squad: d3-architecture
+    purpose: Shared Python geospatial domain models (haversine, geometry, RoutingGraph, dijkstra/astar, routing errors) vendored into vector-routing and vector-logistics via vendor/vector_geo.
+
+  - id: geocoder-http-svc
+    repo: vector-geocoder
+    owner_squad: d2-product
+    purpose: M-Search self-hosted geocoder HTTP API — serves address/POI search results as GeoJSON over HTTP (/search) for the web client; indexes OSM place labels + named roads.
+  - id: privacy-svc
+    repo: vector-privacy
+    owner_squad: d5-security
+    purpose: Location privacy gate (invoked at the ingest boundary) — enforces the adr-0065 rules and emits dropped-reason counters for observability.
+  - id: learning-svc
+    repo: vector-learning
+    owner_squad: d6-data
+    purpose: Self-evolving map aggregation batch (issue 05) — reads the quarantine store, map-matches with a candidate-set search, emits k-anonymous segment_evidence + candidate facts; resumable + idempotent via watermark; feeds vector-kg-graph (issue 06).
+
+dependencies:
+  - from: vector-common
+    to: vector-contracts
+    type: build
+    scope: build
+    note: vector-common consumes shared DTO/error-code contracts for the Node/TS tier.
+  - from: vector-contracts
+    to: vector-governance
+    type: references
+    scope: docs
+    note: contracts cite governance ADRs and Bible rules.
+  - from: vector-playground
+    to: vector-common
+    type: references
+    scope: build
+    note: playground experiments build on shared utilities.
+  - from: vector-playground
+    to: vector-contracts
+    type: references
+    scope: build
+    note: playground experiments validate contract shapes.
+
+  - from: vector-ingestion
+    to: vector-contracts
+    type: build
+    scope: build
+    note: ingestion normalizes sources into contract Coordinate/BoundingBox/Tile shapes.
+  - from: vector-ingestion
+    to: vector-common
+    type: build
+    scope: build
+    note: JS-tier type reference; Python binding generated from contracts when Python tier installs (adr-0006).
+  - from: vector-map-store
+    to: vector-contracts
+    type: build
+    scope: build
+    note: map-store persists contract Coordinate/BoundingBox shapes.
+  - from: vector-map-store
+    to: vector-common
+    type: build
+    scope: build
+    note: JS-tier type reference; Python binding generated from contracts when Python tier installs.
+  - from: vector-tile-gen
+    to: vector-contracts
+    type: build
+    scope: build
+    note: tile-gen emits Tile-schema (mvt/pbf) payloads.
+  - from: vector-tile-gen
+    to: vector-common
+    type: build
+    scope: build
+    note: JS-tier type reference; Python binding generated from contracts when Python tier installs.
+  - from: vector-tile-gen
+    to: vector-map-store
+    type: runtime
+    scope: runtime
+    note: tile-gen reads normalized features from map-store.
+  - from: vector-tile-server
+    to: vector-contracts
+    type: build
+    scope: build
+    note: tile-server serves Tile-schema payloads over HTTP.
+  - from: vector-tile-server
+    to: vector-common
+    type: build
+    scope: build
+    note: JS-tier type reference; Rust binding generated from contracts when Rust tier installs.
+  - from: vector-tile-server
+    to: vector-tile-gen
+    type: runtime
+    scope: runtime
+    note: tile-server serves tiles produced by tile-gen.
+  - from: vector-ingestion
+    to: vector-infra
+    type: references
+    scope: docs
+    note: ingestion deploys via vector-infra topology.
+  - from: vector-map-store
+    to: vector-infra
+    type: references
+    scope: docs
+    note: map-store deploys via vector-infra topology.
+  - from: vector-tile-gen
+    to: vector-infra
+    type: references
+    scope: docs
+    note: tile-gen deploys via vector-infra topology.
+  - from: vector-tile-server
+    to: vector-infra
+    type: references
+    scope: docs
+    note: tile-server deploys via vector-infra topology.
+  - from: vector-infra
+    to: vector-governance
+    type: references
+    scope: docs
+    note: vector-infra follows governance constitution and Bible rules.
+
+  - from: vector-registry
+    to: vector-governance
+    type: references
+    scope: docs
+    note: registry-svc consumes the governance constitution, Bible, and Blueprint rules for ownership/CODEOWNERS semantics.
+  - from: vector-bus
+    to: vector-governance
+    type: references
+    scope: docs
+    note: bus-svc message envelope + channels + escalation levels follow Blueprint §6/§7.
+  - from: vector-bus
+    to: vector-contracts
+    type: references
+    scope: docs
+    note: bus envelope/standard-message contract aligns with vector-contracts event/contract schemas.
+  - from: vector-bus
+    to: vector-registry
+    type: references
+    scope: runtime
+    note: bus-svc can resolve ownership/CODEOWNERS via registry-svc when routing cross-ownership escalations.
+  - from: vector-kg-ingest
+    to: vector-bus
+    type: references
+    scope: runtime
+    note: kg-ingest-svc subscribes to vector-bus channels (#events/#escalations/#contracts) to ingest events (networked via NetworkBusClient adapter).
+  - from: vector-kg-ingest
+    to: vector-kg-graph
+    type: build
+    scope: runtime
+    note: ingest/retrieval/reconcile operate on the graph store + vector index services.
+  - from: vector-kg-ingest
+    to: vector-registry
+    type: references
+    scope: runtime
+    note: kg-reconcile-svc diffs vector/registry ownership against the KG (Bible §8 R7).
+  - from: vector-kg-graph
+    to: vector-bus
+    type: references
+    scope: runtime
+    note: kg-graph-svc / kg-vector-svc publish/subscribe via vector-bus for event-sourced updates.
+  - from: vector-coa-fleet
+    to: vector-bus
+    type: references
+    scope: runtime
+    note: coa-fleet-svc consumes vector-bus (E2) for fleet scheduling/escalation events by DI (networked via NetworkBusClient adapter).
+  - from: vector-coa-runtime
+    to: vector-bus
+    type: references
+    scope: runtime
+    note: coa-runtime-svc consumes vector-bus (E2) for orchestration event routing by DI (networked via NetworkBusClient adapter).
+  - from: vector-coa-runtime
+    to: vector-registry
+    type: references
+    scope: runtime
+    note: coa-runtime-svc resolves ownership/CODEOWNERS via registry-svc (E9) by DI.
+  - from: vector-coa-runtime
+    to: vector-ci
+    type: references
+    scope: runtime
+    note: coa-runtime-svc review-router calls ci-svc (E4) gates by DI.
+  - from: vector-ci
+    to: vector-bus
+    type: references
+    scope: runtime
+    note: ci-svc consumes vector-bus (E2) for gate/CI events by DI (networked via NetworkBusClient adapter).
+  - from: vector-security
+    to: vector-bus
+    type: references
+    scope: runtime
+    note: vault-svc audit-log subscribes to vector-bus (#events/#escalations); threat-intel raises #escalations L3; E5 consumes E2 Bus by DI (networked via NetworkBusClient adapter).
+  - from: vector-ci
+    to: vector-security
+    type: references
+    scope: runtime
+    note: ci-svc (E4) references E5 (Security) for the deeper security scan wired via SecurityGate.setE5Scanner (WBS §10 — CI gates depend on Security).
+  - from: vector-observability
+    to: vector-bus
+    type: references
+    scope: runtime
+    note: otel-svc emits metrics/alert events and alert-mgr publishes to #escalations/#events via vector-bus (E2) by DI (networked via NetworkBusClient adapter).
+  - from: vector-observability
+    to: vector-registry
+    type: references
+    scope: runtime
+    note: alert-mgr routes alerts to the owning squad resolved via registry-svc (E9) by DI.
+  - from: vector-observability
+    to: vector-kg-graph
+    type: references
+    scope: runtime
+    note: MetricsRegistry emits Metric nodes to the KG graph store (E3) by DI.
+  - from: vector-agents
+    to: vector-bus
+    type: references
+    scope: runtime
+    note: agents-svc worker-fw/dma-fw/sla-fw/research-pipeline consume E2 Bus (subscription + escalation) by DI (networked via NetworkBusClient adapter).
+  - from: vector-agents
+    to: vector-kg-graph
+    type: references
+    scope: runtime
+    note: worker-fw retrieves squad README/ADRs from the E3 KG; research-pipeline writes KG/Report/Recommendation nodes by DI.
+  - from: vector-agents
+    to: vector-registry
+    type: references
+    scope: runtime
+    note: dma-fw enforceRACI resolves ownership via E9 registry-svc by DI.
+  - from: vector-agents
+    to: vector-security
+    type: references
+    scope: runtime
+    note: research-pipeline consumes E5 CVE intake (critical CVE escalation) by DI.
+  - from: vector-agents
+    to: vector-kg-ingest
+    type: references
+    scope: runtime
+    note: research-pipeline relies on the E3 KG ingest pipeline for durable KG writes.
+  - from: vector-docs
+    to: vector-ci
+    type: references
+    scope: runtime
+    note: doc-lint integrates with the E4 quality gate (doc-staleness) by DI.
+  - from: vector-docs
+    to: vector-kg-graph
+    type: references
+    scope: runtime
+    note: adr-tool indexes ADRs as KG Decision nodes; kg-portal queries the E3 KG by DI.
+  - from: vector-docs
+    to: vector-registry
+    type: references
+    scope: runtime
+    note: doc-lint checks squad docs per E9 registry ownership by DI.
+  - from: vector-docs
+    to: vector-bus
+    type: references
+    scope: runtime
+    note: docs-svc (doc-lint/adr-tool/kg-portal) consumes E2 Bus by DI (networked via NetworkBusClient adapter).
+  - from: vector-routing
+    to: vector-contracts
+    type: build
+    scope: build
+    note: routing normalizes Coordinate/BoundingBox/GeoJSON shapes from vector-contracts.
+  - from: vector-routing
+    to: vector-ingestion
+    type: references
+    scope: build
+    note: routing consumes GeoJSON way features normalized by vector-ingestion.
+  - from: vector-routing
+    to: vector-map-store
+    type: references
+    scope: runtime
+    note: routing consumes normalized map features persisted by vector-map-store at runtime.
+  - from: vector-routing
+    to: vector-bus
+    type: consumes
+    scope: runtime
+    note: "E2 bus consumer — navigation requests/results over :8090 (env-gated VECTOR_BUS_URL)"
+  - from: vector-logistics
+    to: vector-bus
+    type: consumes
+    scope: runtime
+    note: "E2 bus consumer — multi-stop / multi-vehicle VRP-lite / Capacitated VRP (CVRP) logistics requests/results over :8090 (env-gated VECTOR_BUS_URL); agent://logistics.vector-01 (adr-0044, extended by adr-0045 and adr-0046)"
+  - from: vector-tile-server
+    to: vector-logistics
+    type: runtime
+    scope: runtime
+    note: tile-server logistics-overlay viewer proxies /logistics and publishes logistics tasks on the E2 bus.
+  - from: vector-tile-server
+    to: vector-routing
+    type: runtime
+    scope: runtime
+    note: tile-server route-overlay viewer calls the vector-routing HTTP /route API to draw live routes on the M1 map.
+  - from: vector-tile-server
+    to: vector-routing
+    type: runtime
+    scope: runtime
+    note: tile-server Nav panel calls the vector-routing HTTP /navigate API (nginx :8080 -> vector-routing:8081) to draw the live route + turn-by-turn ETA list on the M1 map.
+  - from: vector-vision
+    to: vector-contracts
+    type: build
+    scope: build
+    note: vision emits Coordinate/BoundingBox/GeoJSON contract shapes consumed downstream.
+  - from: vector-vision
+    to: vector-ingestion
+    type: references
+    scope: build
+    note: vision-detected GeoJSON features are normalized by vector-ingestion into contract shapes.
+  - from: vector-vision
+    to: vector-map-store
+    type: references
+    scope: runtime
+    note: georeferenced features from vision are persisted to vector-map-store at runtime.
+  - from: vector-tile-server
+    to: vector-vision
+    type: runtime
+    scope: runtime
+    note: tile-server CV-overlay viewer calls the vector-vision HTTP /detect API to draw live detected features on the M1 map.
+  - from: vector-reconstruction
+    to: vector-contracts
+    type: build
+    scope: build
+    note: reconstruction normalizes Coordinate/BoundingBox/GeoJSON shapes from vector-contracts.
+  - from: vector-reconstruction
+    to: vector-ingestion
+    type: references
+    scope: build
+    note: reconstruction consumes GeoJSON way features normalized by vector-ingestion.
+  - from: vector-reconstruction
+    to: vector-map-store
+    type: references
+    scope: runtime
+    note: reconstruction consumes normalized map features persisted by vector-map-store at runtime.
+  - from: vector-routing
+    to: vector-reconstruction
+    type: references
+    scope: runtime
+    note: routing consumes the reconstructed road network to build its routing graph at runtime.
+  - from: vector-tile-server
+    to: vector-reconstruction
+    type: runtime
+    scope: runtime
+    note: tile-server road-overlay viewer calls the vector-reconstruction HTTP /reconstruct API to draw live reconstructed roads on the M1 map.
+  - from: vector-traffic
+    to: vector-contracts
+    type: build
+    scope: build
+    note: traffic normalizes Coordinate/BoundingBox/GeoJSON shapes from vector-contracts.
+  - from: vector-traffic
+    to: vector-ingestion
+    type: references
+    scope: build
+    note: traffic consumes GeoJSON probe/segment features normalized by vector-ingestion.
+  - from: vector-traffic
+    to: vector-map-store
+    type: references
+    scope: runtime
+    note: traffic consumes normalized map features persisted by vector-map-store at runtime.
+  - from: vector-traffic
+    to: vector-reconstruction
+    type: references
+    scope: runtime
+    note: traffic estimates congestion on the road network reconstructed by vector-reconstruction at runtime.
+  - from: vector-tile-server
+    to: vector-traffic
+    type: runtime
+    scope: runtime
+    note: tile-server traffic-overlay viewer calls the vector-traffic HTTP /traffic API to draw live congestion on the M1 map.
+  - from: vector-offline-maps
+    to: vector-contracts
+    type: build
+    scope: build
+    note: offline normalizes Coordinate/BoundingBox/GeoJSON shapes from vector-contracts.
+  - from: vector-offline-maps
+    to: vector-ingestion
+    type: references
+    scope: build
+    note: offline consumes GeoJSON region features normalized by vector-ingestion.
+  - from: vector-offline-maps
+    to: vector-map-store
+    type: references
+    scope: runtime
+    note: offline consumes normalized map features persisted by vector-map-store at runtime.
+  - from: vector-tile-server
+    to: vector-offline-maps
+    type: runtime
+    scope: runtime
+    note: tile-server offline-overlay viewer calls the vector-offline-maps HTTP /offline API to draw live offline coverage on the M1 map.
+  - from: vector-hdmaps
+    to: vector-contracts
+    type: build
+    scope: build
+    note: hd normalizes Coordinate/BoundingBox/GeoJSON shapes from vector-contracts.
+  - from: vector-hdmaps
+    to: vector-ingestion
+    type: references
+    scope: build
+    note: hd consumes GeoJSON lane features normalized by vector-ingestion.
+  - from: vector-hdmaps
+    to: vector-map-store
+    type: references
+    scope: runtime
+    note: hd consumes normalized map features persisted by vector-map-store at runtime.
+  - from: vector-tile-server
+    to: vector-hdmaps
+    type: runtime
+    scope: runtime
+    note: tile-server HD-overlay viewer calls the vector-hdmaps HTTP /hdmap API to draw live HD lanes on the M1 map.
+  - from: vector-global
+    to: vector-contracts
+    type: build
+    scope: build
+    note: global normalizes Coordinate/BoundingBox/GeoJSON shapes from vector-contracts.
+  - from: vector-global
+    to: vector-ingestion
+    type: references
+    scope: build
+    note: global consumes GeoJSON region features normalized by vector-ingestion.
+  - from: vector-global
+    to: vector-map-store
+    type: references
+    scope: runtime
+    note: global consumes normalized map features persisted by vector-map-store at runtime.
+  - from: vector-global
+    to: vector-hdmaps
+    type: runtime
+    scope: runtime
+    note: global consumes HD-map lane features persisted by vector-hdmaps at runtime.
+  - from: vector-global
+    to: vector-routing
+    type: runtime
+    scope: runtime
+    note: global consumes routing graph/route features produced by vector-routing at runtime.
+  - from: vector-global
+    to: vector-traffic
+    type: runtime
+    scope: runtime
+    note: global consumes per-segment traffic/congestion features produced by vector-traffic at runtime (per-region traffic overlay links).
+  - from: vector-global
+    to: vector-vision
+    type: runtime
+    scope: runtime
+    note: global consumes georeferenced vision detections produced by vector-vision at runtime (per-region vision overlay links).
+  - from: vector-global
+    to: vector-offline-maps
+    type: runtime
+    scope: runtime
+    note: global consumes offline coverage/size estimates produced by vector-offline-maps at runtime (per-region offline overlay links).
+  - from: vector-tile-server
+    to: vector-global
+    type: runtime
+    scope: runtime
+    note: tile-server Global-overlay viewer calls the vector-global HTTP /global API to draw worldwide regions on the M1 map.
+  - from: vector-routing
+    to: vector-geo
+    type: build
+    scope: build
+    note: vector-routing vendors vector_geo (haversine, graph, algorithms, errors) via vendor/vector_geo.
+  - from: vector-logistics
+    to: vector-geo
+    type: build
+    scope: build
+    note: vector-logistics vendors vector_geo (haversine, graph, algorithms, errors) via vendor/vector_geo.
+
+  - from: vector-web
+    to: vector-privacy
+    type: build
+    scope: build
+    note: vector-web vendors vector_privacy (adr-0065) and applies it on POST /traces before TraceStore.append (S1 ingest gate).
+  - from: vector-learning
+    to: vector-web
+    type: references
+    scope: runtime
+    note: learning-svc reads the vector-web quarantine store (observation + R*Tree index, issue 02) read-only via QuarantineStore.
+  - from: vector-learning
+    to: vector-privacy
+    type: build
+    scope: build
+    note: vector-learning vendors vector_privacy (adr-0065) so ingest and aggregation share one definition of the rules.
+  - from: vector-learning
+    to: vector-kg-graph
+    type: references
+    scope: runtime
+    note: learning-svc emits learned facts (segment_evidence + candidate facts, issue 05) into the E3 KG for promotion by issues 07/08/09.
+  - from: vector-kg-graph
+    to: vector-learning
+    type: references
+    scope: runtime
+    note: LearnedFact nodes carry source_stage=learning and provenance pointing at the vector-learning batch that produced them.

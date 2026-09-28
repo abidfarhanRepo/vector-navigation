@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vector.dev/schemas/navigation-result.schema.json",
+  "title": "NavigationResult",
+  "description": "payload.kind == 'navigation_result'. Notification payload from vector-routing (ADR-0043). Published on #events, correlated by correlation_id.",
+  "type": "object",
+  "required": ["kind", "ok"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "navigation_result" },
+    "ok": { "type": "boolean" },
+    "geojson": {
+      "description": "GeoJSON FeatureCollection for the computed route, or null when unavailable.",
+      "type": ["object", "null"]
+    },
+    "error": {
+      "description": "Error message when ok is false, else null.",
+      "type": ["string", "null"]
+    }
+  }
+}

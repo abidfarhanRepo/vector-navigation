@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vector.dev/schemas/error.schema.json",
+  "title": "ErrorEnvelope",
+  "description": "Standard error envelope returned by Vector APIs. Error codes in errors/error-codes.json.",
+  "type": "object",
+  "required": ["code", "message"],
+  "additionalProperties": false,
+  "properties": {
+    "code": { "type": "string", "pattern": "^VEC-\\d{4}$" },
+    "message": { "type": "string" },
+    "detail": { "type": "string" },
+    "correlation_id": { "type": "string" }
+  }
+}

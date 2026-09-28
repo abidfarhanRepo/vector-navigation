@@ -1,0 +1,16 @@
+{
+  "name": "vector-bus",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vector — vector-bus (E2 Communication & Event Backbone)",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "node --test",
+    "bus-serve": "node src/server-main.js",
+    "fleet:live-proof": "node scripts/fleet-live-proof.mjs"
+  },
+  "devDependencies": {
+    "yaml": "^1.10.0"
+  }
+}

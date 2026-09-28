@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "seg-1", "free_flow_kmh": 50.0 },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[13.4000, 52.5200], [13.4100, 52.5200]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "seg-2", "free_flow_kmh": 50.0 },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[13.4000, 52.5000], [13.4100, 52.5000]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "seg-3", "free_flow_kmh": 50.0 },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[13.4500, 52.5300], [13.4600, 52.5300]]
+      }
+    }
+  ]
+}

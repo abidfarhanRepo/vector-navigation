@@ -1,0 +1,48 @@
+{
+  "name": "Vector — Navigation",
+  "short_name": "Vector",
+  "description": "Self-hosted Waze-class navigation: live routing, traffic reroute, incident reporting. No third-party map or search services.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#12161e",
+  "theme_color": "#12161e",
+  "categories": ["navigation", "maps", "travel", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Navigate home",
+      "short_name": "Home",
+      "url": "/?shortcut=home&source=pwa"
+    },
+    {
+      "name": "Report an incident",
+      "short_name": "Report",
+      "url": "/?shortcut=report&source=pwa"
+    }
+  ]
+}

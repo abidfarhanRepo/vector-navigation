@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "description": "Shared DTO examples. These are canonical shapes; JSON Schemas in schemas/ formalize them, and proto/ defines the wire format.",
+  "Coordinate": { "lat": 52.5200, "lon": 13.4050 },
+  "BoundingBox": { "min_lat": 52.3, "min_lon": 13.2, "max_lat": 52.7, "max_lon": 13.6 },
+  "TileRequest": { "z": 12, "x": 2200, "y": 1343, "layer": "base" },
+  "TileResponse": { "z": 12, "x": 2200, "y": 1343, "format": "mvt", "bytes": 0 },
+  "MapChangeProposal": { "id": "uuid", "source": "crowd", "confidence": 0.0, "geometry": {} },
+  "LogisticsRequest": {
+    "kind": "logistics",
+    "stops": [[52.5200, 13.4050], [52.5300, 13.4100], [52.5250, 13.3980], [52.5350, 13.4150], [52.5150, 13.3920]],
+    "return_to_start": false,
+    "fixed_order": false,
+    "profile": "car",
+    "reply_to": "agent://viewer.vector-01",
+    "constraints": {},
+    "vehicles": 2,
+    "capacities": [10, 10],
+    "demands": [0, 3, 4, 2, 1],
+    "time_windows": [[0, 99999],[0, 99999],[0, 99999],[0, 99999],[0, 99999]],
+    "service_times": [0, 30, 45, 20, 10],
+    "start_time": 0
+  },
+  "LogisticsResult": {
+    "kind": "logistics_result",
+    "ok": true,
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "geometry": { "type": "LineString", "coordinates": [[13.4050, 52.5200], [13.4100, 52.5300], [13.3980, 52.5250]] },
+          "properties": { "total_distance_km": 2.4, "total_duration_min": 7.1, "order": [0, 1, 2] }
+        },
+        {
+          "type": "Feature",
+          "geometry": { "type": "Point", "coordinates": [13.4050, 52.5200] },
+          "properties": { "stop_index": 0, "optimized_index": 0 }
+        },
+        {
+          "type": "Feature",
+          "geometry": { "type": "Point", "coordinates": [13.4100, 52.5300] },
+          "properties": { "stop_index": 1, "optimized_index": 1 }
+        },
+        {
+          "type": "Feature",
+          "geometry": { "type": "Point", "coordinates": [13.3980, 52.5250] },
+          "properties": { "stop_index": 2, "optimized_index": 2 }
+        }
+      ]
+    },
+    "order": [0, 1, 2],
+    "total_distance_km": 2.4,
+    "total_duration_min": 7.1,
+    "error": null,
+    "routes": [
+      { "vehicle": 0, "order": [0, 1, 3], "distance_km": 5.1, "duration_min": 6.0, "arrivals": [0, 101.5, 260.2], "violations": 0 },
+      { "vehicle": 1, "order": [0, 2, 4], "distance_km": 7.2, "duration_min": 8.1, "arrivals": [0, 101.5, 260.2], "violations": 0 }
+    ],
+    "vehicles": 2,
+    "window_violations": 0,
+    "start_time": 0
+  }
+}

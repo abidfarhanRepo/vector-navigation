@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Daylight window colours.
+
+  These exist so the WINDOW is painted Vector's own field colour before Compose
+  has drawn anything. Without them the launch shows the platform default window
+  background for a frame or two, which is the "flash of unstyled Material UI"
+  the brief forbids — and on a light-first design a white flash is worse than
+  most, because the app's own field is a warm cloud rather than white.
+
+  Kept in step with `design/VectorColor.kt` by `design/ContrastTest`'s sibling
+  assertion in `DesignSystemParityTest`: the hexes here must equal the Kotlin
+  roles, because a resource and a token that drift are two different colours
+  with one name.
+-->
+<resources>
+    <!-- Ramp.cloud200 — VectorColors.field in the light theme. -->
+    <color name="vector_field">#F4F1EB</color>
+    <!-- Ramp.ink900 — VectorColors.ink in the light theme. -->
+    <color name="vector_ink">#1A1C1E</color>
+    <!-- Ramp.cerulean600 — VectorColors.primary in the light theme. -->
+    <color name="vector_primary">#1F6FD0</color>
+</resources>

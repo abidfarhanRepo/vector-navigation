@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vector_traffic"
+version = "0.1.0"
+description = "Vector — vector-traffic"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+vector-traffic-health = "vector_traffic.__main__:main"
+vector-traffic-serve = "vector_traffic.serve:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vector_traffic"]

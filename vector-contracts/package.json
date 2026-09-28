@@ -1,0 +1,15 @@
+{
+  "name": "vector-contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vector — vector-contracts",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "ajv": "^8.12.0",
+    "yaml": "^1.10.0"
+  }
+}

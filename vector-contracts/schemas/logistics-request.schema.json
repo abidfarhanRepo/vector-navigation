@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vector.dev/schemas/logistics-request.schema.json",
+  "title": "LogisticsRequest",
+  "description": "payload.kind == 'logistics'. Task payload for multi-stop logistics routing E2 bus consumer (ADR-0043). Published on #tasks.",
+  "type": "object",
+  "required": ["kind", "stops", "reply_to"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "logistics" },
+    "stops": {
+      "type": "array",
+      "description": "Ordered list of [lat, lon] stops; stops[0] is the depot/start. minItems 2.",
+      "items": {
+        "type": "array",
+        "items": { "type": "number" },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "minItems": 2
+    },
+    "return_to_start": {
+      "type": "boolean",
+      "description": "If true, append the depot at the end to close the loop.",
+      "default": false
+    },
+    "fixed_order": {
+      "type": "boolean",
+      "description": "If true, do NOT optimize order; sequence stops as given.",
+      "default": false
+    },
+    "profile": {
+      "type": "string",
+      "description": "Routing profile.",
+      "default": "car"
+    },
+    "reply_to": {
+      "type": "string",
+      "description": "Agent address where the logistics_result is delivered."
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Optional reserved constraints; ignored in v1.",
+      "default": {}
+    },
+    "vehicles": {
+      "type": "integer",
+      "description": "Number of vehicles for multi-vehicle VRP-lite routing.",
+      "minimum": 1,
+      "default": 1
+    },
+    "depots": {
+      "type": "array",
+      "description": "Optional array of [lat, lon] depot coordinates; one per vehicle when provided.",
+      "items": {
+        "type": "array",
+        "items": { "type": "number" },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "minItems": 0
+    },
+    "balanced": {
+      "type": "boolean",
+      "description": "If true, balance workload across vehicles rather than minimizing total cost.",
+      "default": true
+    },
+    "capacities": {
+      "type": "array",
+      "description": "Per-vehicle capacity (optional).",
+      "items": { "type": "number", "minimum": 0 },
+      "minItems": 0
+    },
+    "demands": {
+      "type": "array",
+      "description": "Per-stop demand (optional); length should equal stops.",
+      "items": { "type": "number", "minimum": 0 },
+      "minItems": 0
+    },
+    "time_windows": {
+      "type": "array",
+      "description": "Optional per-stop [open, close] time windows in seconds, aligned to stops.",
+      "items": {
+        "type": "array",
+        "items": { "type": "number" },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "minItems": 0
+    },
+    "service_times": {
+      "type": "array",
+      "description": "Optional per-stop service times in seconds, aligned to stops.",
+      "items": { "type": "number", "minimum": 0 },
+      "minItems": 0
+    },
+    "start_time": {
+      "type": "number",
+      "description": "Depot departure time in seconds (epoch).",
+      "default": 0
+    }
+  }
+}

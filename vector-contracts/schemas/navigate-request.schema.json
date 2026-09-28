@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vector.dev/schemas/navigate-request.schema.json",
+  "title": "NavigateRequest",
+  "description": "payload.kind == 'navigate'. Task payload for vector-routing E2 bus consumer (ADR-0043). Published on #tasks.",
+  "type": "object",
+  "required": ["kind", "from_ll", "to_ll", "reply_to"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "navigate" },
+    "from_ll": {
+      "type": "array",
+      "description": "Origin [lat, lon].",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "to_ll": {
+      "type": "array",
+      "description": "Destination [lat, lon].",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "via": {
+      "description": "Ordered intermediate waypoints as [lat, lon] pairs.",
+      "type": ["array", "null"],
+      "default": [],
+      "items": {
+        "type": "array",
+        "items": { "type": "number" },
+        "minItems": 2,
+        "maxItems": 2
+      }
+    },
+    "profile": {
+      "type": "string",
+      "description": "Routing profile.",
+      "default": "car"
+    },
+    "reply_to": {
+      "type": "string",
+      "description": "Agent address to send the navigation_result to."
+    }
+  }
+}

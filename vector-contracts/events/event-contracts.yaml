@@ -1,0 +1,61 @@
+version: 1
+description: >
+  Event contracts for the Vector event backbone (Blueprint §6). Events are past-tense facts and
+  route to the channel taxonomy. The standard envelope wraps every message.
+
+envelope:
+  id: uuid
+  correlation_id: uuid
+  from: agent://<class>/<id>
+  to: agent://<class>/<id>
+  intent: TASK | ASSIGN | REVIEW | ESCALATE | NOTIFY | CONTRACT
+  priority: P0 | P1 | P2 | P3
+  payload: {}
+  sla_ms: integer
+  timestamp: iso8601
+
+channels:
+  - name: "#tasks"
+    purpose: work assignment queue (priority-ordered)
+  - name: "#events"
+    purpose: immutable fact stream (merges, deploys, incidents)
+  - name: "#contracts"
+    purpose: interface / dependency declarations
+  - name: "#escalations"
+    purpose: exceptions routed up
+  - name: "#broadcast"
+    purpose: org-wide notices
+
+events:
+  - name: tile.generated
+    channel: "#events"
+    payload_ref: schemas/tile.schema.json
+  - name: map.change.proposed
+    channel: "#events"
+    payload_ref: dtos/dto.examples.json#/MapChangeProposal
+  - name: traffic.probe.ingested
+    channel: "#events"
+  - name: contract.published
+    channel: "#contracts"
+  - name: escalation.raised
+    channel: "#escalations"
+  - name: broadcast.notice
+    channel: "#broadcast"
+  - name: navigate.request
+    channel: "#tasks"
+    intent: TASK
+    to: agent://routing.vector-01
+    payload_ref: schemas/navigate-request.schema.json
+  - name: navigate.result
+    channel: "#events"
+    intent: NOTIFY
+    payload_ref: schemas/navigation-result.schema.json
+  - name: logistics.request
+    channel: "#tasks"
+    intent: TASK
+    to: agent://logistics.vector-01
+    payload_ref: schemas/logistics-request.schema.json
+  - name: logistics.result
+    channel: "#events"
+    intent: NOTIFY
+    payload_ref: schemas/logistics-result.schema.json

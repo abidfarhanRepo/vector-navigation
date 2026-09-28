@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Vector's launch mark.
+
+  Original artwork, drawn for this identity: an open "V" in the brand cerulean
+  over a waypoint dot in the accent coral. It reads as a navigation cursor and
+  as the product's initial at the same time, which is what a launch mark has to
+  do in the 400 ms it is on screen — and it survives being rendered at 48 dp on
+  a splash surface, which a detailed mark does not.
+
+  Two colours only, both from the design system's ramps. The platform scales
+  this into the splash's icon slot; the ink stays inside the central 2/3 so an
+  aggressive mask (a circle, a squircle) cannot clip it.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- The V. Round caps and joins, matching the icon family's corner language. -->
+    <path
+        android:pathData="M36,38 L54,70 L72,38"
+        android:strokeColor="#1F6FD0"
+        android:strokeWidth="9"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+
+    <!-- The waypoint. Small, low, and off the V's axis so the mark is not a
+         symmetric letterform but a letterform with somewhere to go. -->
+    <path
+        android:pathData="M54,80 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"
+        android:fillColor="#E4573F" />
+</vector>

@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vector — contribute driving data</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0b1420">
+<!--
+  The collection surface (ticket 19/20/21, GOALS.md "three tiers, not one").
+
+  WHY THIS IS A PAGE AND NOT ANOTHER BUTTON ON THE MAP
+  ---------------------------------------------------
+  Collection used to be one toolbar button and a modal. That shape can express
+  "record" and "stop" and nothing else — not a file preview, not "3 trips queued,
+  no connection", not the platform limits a driver has to know BEFORE they set off,
+  and not a comparison between the three tiers. Cramming it into the map dock made
+  the map worse and the collection worse.
+
+  It also has an architectural payoff that is not incidental: adr-0070 puts the
+  native shell's whole scope at capture, notification and a permission explainer,
+  loading the LIVE ORIGIN rather than a bundled copy. This page is that screen. The
+  shell gets a home without a second implementation, and it is healable from the
+  server — which is the entire argument of adr-0070 §Decision 2.
+
+  ORDERING IS A CLAIM, NOT A LAYOUT
+  ---------------------------------
+  Import is first because it is the tier that actually works: no install, no
+  permission, and the recorder already had background location because the OS gave
+  it. Browser capture is second and states its ceiling before offering the button —
+  a control that appears to record and quietly does not is worse than one that
+  refuses. The app is third and does not pretend to be downloadable, because
+  adr-0070 is Proposed and gated on a battery measurement nobody has taken.
+-->
+<style>
+  :root {
+    --bg: #0b1420; --panel: #0e1a28; --line: #1e2b3c; --ink: #e8eef6;
+    --dim: #8b95a6; --accent: #0a84ff; --good: #34c759; --warn: #ffb02e;
+    --bad: #ff453a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: #6ec1ff; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px 64px; }
+  header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 4px; }
+  h1 { font-size: 22px; margin: 0; }
+  h2 { font-size: 17px; margin: 0 0 4px; }
+  h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--dim); margin: 18px 0 6px; }
+  p { margin: 8px 0; }
+  .lede { color: var(--dim); margin: 0 0 20px; }
+  .card { background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px; margin: 14px 0; }
+  .card.primary { border-color: #1d4f80; }
+  .card header { justify-content: space-between; margin-bottom: 8px; }
+  .tier { font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--dim); }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--dim); white-space: nowrap; }
+  .tag.works { color: var(--good); border-color: #1c4c2c; }
+  .tag.limited { color: var(--warn); border-color: #5a4218; }
+  .tag.later { color: var(--dim); }
+  button, .btn { font: inherit; border-radius: 8px; padding: 9px 15px;
+    border: 1px solid var(--line); background: #16212f; color: var(--ink);
+    cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  li { margin: 3px 0; }
+  .fine { font-size: 13px; color: var(--dim); }
+  input[type=file] { font: inherit; color: var(--dim); max-width: 100%; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th { color: var(--dim); font-weight: 600; font-size: 11px; text-transform: uppercase; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .scroll { overflow-x: auto; }
+  .note { border-left: 3px solid var(--line); padding: 6px 0 6px 12px;
+    color: var(--dim); font-size: 13px; }
+  .note.warn { border-color: var(--warn); color: #e8d3a8; }
+  .note.bad { border-color: var(--bad); color: #f3b6b2; }
+  .note.good { border-color: var(--good); color: #bfe6c8; }
+  .check { display: flex; gap: 10px; align-items: flex-start; margin: 12px 0;
+    background: #12202f; border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 12px; }
+  .check input { margin-top: 4px; }
+  .stat { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 6px; }
+  .stat div { min-width: 92px; }
+  .stat b { display: block; font-size: 19px; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 11px; color: var(--dim); text-transform: uppercase; }
+  .hidden { display: none; }
+  footer { margin-top: 28px; color: var(--dim); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Contribute driving data</h1>
+    <a id="back" href="/" class="fine">&larr; back to the map</a>
+  </header>
+  <p class="lede">Vector learns road speeds from how people actually drive. It has
+    <strong>no real driving data yet</strong> — this page is how that changes.
+    Everything here is opt-in, and each way of contributing asks separately.</p>
+
+  <!-- ================= TIER 1 — import ================= -->
+  <section class="card primary">
+    <header class="row">
+      <div>
+        <div class="tier">Tier 1 &middot; recommended</div>
+        <h2>Upload a track you already recorded</h2>
+      </div>
+      <span class="tag works">works today</span>
+    </header>
+    <p>If you record drives with <strong>OsmAnd, Organic Maps, Strava, Komoot,
+      Garmin</strong> or your phone's own recorder, export a <code>.gpx</code> and
+      upload it here. Those apps have the background location permission a web page
+      cannot get, so the recording is already complete and correct.</p>
+    <p class="fine">This also reaches drives you recorded <em>months ago</em>, which
+      live capture can never recover. Up to a year old is accepted; older than that
+      is refused, because a road may have been resurfaced or re-signed since and old
+      evidence can be wrong in a way that looks right.</p>
+
+    <div class="row" style="margin-top:12px">
+      <input type="file" id="file" accept=".gpx,.geojson,.json,application/gpx+xml,application/geo+json">
+      <button id="check" class="primary" disabled>Check this file</button>
+    </div>
+    <p class="fine" id="file-note">Nothing is uploaded until you press Check, and
+      nothing is stored until you confirm what it found.</p>
+
+    <div id="preview" class="hidden">
+      <h3>What this file contains</h3>
+      <div class="stat" id="preview-stat"></div>
+      <div id="preview-notes"></div>
+      <div class="scroll"><table id="preview-table">
+        <thead><tr>
+          <th>Trip</th><th>When</th><th class="num">In file</th>
+          <th class="num">Will store</th><th>Status</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table></div>
+
+      <div class="check" id="consent-box">
+        <input type="checkbox" id="consent">
+        <label for="consent">I want to contribute this file. I understand it holds
+          my movements, that the first and last 200&nbsp;m of every trip are
+          discarded, that the individual positions are deleted within 72 hours, and
+          that only per-road aggregates are kept.</label>
+      </div>
+      <div class="row">
+        <button id="commit" class="primary" disabled>Import</button>
+        <button id="cancel">Cancel</button>
+      </div>
+    </div>
+    <div id="result" class="hidden"></div>
+  </section>
+
+  <!-- ================= TIER 2 — live browser capture ================= -->
+  <section class="card">
+    <header class="row">
+      <div>
+        <div class="tier">Tier 2</div>
+        <h2>Record now, in this browser</h2>
+      </div>
+      <span class="tag limited">limited by the browser</span>
+    </header>
+    <p><strong>Read this before you start.</strong> A web page cannot record in the
+      background. Both iPhone Safari and Android Chrome stop sending positions the
+      moment the tab is hidden or the screen locks — so a drive recorded this way
+      needs the phone <strong>awake, unlocked and on this tab</strong> for the whole
+      journey.</p>
+    <ul class="fine">
+      <li>Mount the phone and keep it charging. A screen held on for an hour is
+        heavy on the battery.</li>
+      <li>If the screen locks, the recording stops. The gap is detectable and the
+        trip is split rather than presented as a whole journey — a speed profile
+        built from half a drive is worse than none, because it looks legitimate.</li>
+      <li>If you want a drive recorded without babysitting it, use Tier 1: let a
+        recorder that has permission do the work.</li>
+    </ul>
+    <div id="wakelock-note" class="note"></div>
+    <div class="row" style="margin-top:12px">
+      <a id="to-map" class="btn" href="/">Open the map to record</a>
+    </div>
+    <p class="fine">Recording lives on the map screen, where you can see the track
+      being drawn. This page will grow a queue readout when live capture gets its
+      offline queue (ticket 20).</p>
+  </section>
+
+  <!-- ================= TIER 3 — native shell ================= -->
+  <section class="card">
+    <header class="row">
+      <div>
+        <div class="tier">Tier 3</div>
+        <h2>Install the app</h2>
+      </div>
+      <span class="tag later">not built yet</span>
+    </header>
+    <p>The only way to record a drive without thinking about it is a real app with
+      real background location. That decision is written down
+      (<a href="/adr/adr-0070" onclick="return false;" title="vector-governance/adr/adr-0070-native-capture-shell.md">ADR-0070</a>,
+      Android first, sideloaded) but it is <strong>not accepted yet</strong>: it is
+      waiting on a measured battery cost for an hour of recording and a plan for how
+      the app updates itself.</p>
+    <p class="fine">There is deliberately no download button here. Offering one
+      before those numbers exist would be the same mistake as a record button that
+      quietly records nothing.</p>
+  </section>
+
+  <!-- ================= what happens to the data ================= -->
+  <section class="card">
+    <h2>What happens to what you send</h2>
+    <h3>Removed before it is stored</h3>
+    <ul>
+      <li><strong>The first and last 200&nbsp;m of every trip.</strong> Your home
+        and your destination are not in the data. This is applied per <em>trip</em>,
+        so uploading a drive in pieces does not leak its ends.</li>
+      <li><strong>Fixes worse than 25&nbsp;m of accuracy</strong>, and any position
+        implying a speed no car reaches — bad fixes become wrong road speeds.</li>
+      <li>Positions are rounded to about a metre and times to five seconds.</li>
+    </ul>
+    <h3>Kept, briefly</h3>
+    <ul>
+      <li>Individual positions live in a quarantine for <strong>72 hours</strong>
+        and are then deleted, not archived.</li>
+      <li>Each trip carries a fresh random label, thrown away when the trip ends,
+        so one trip cannot be linked to another — and there is no account, device
+        id or IP stored beside it.</li>
+    </ul>
+    <h3>Kept for good</h3>
+    <ul>
+      <li>Per-stretch-of-road typical speeds, per time of week, and only once
+        <strong>at least five separate trips</strong> cover the same stretch in the
+        same band.</li>
+      <li class="fine">Precisely: that floor counts <em>trips</em>, not people.
+        Because trip labels are deliberately unlinkable, five trips by five drivers
+        and five trips by one driver are indistinguishable — so a month of your own
+        commute can clear the floor on its own. What is published is still a fact
+        about a road rather than about a person, but nobody should read the floor as
+        "five people agreed to this" (ADR-0069).</li>
+    </ul>
+    <p class="fine">Don't take our word for it:
+      <a id="link-counters" href="/privacy-counters" target="_blank" rel="noopener">what has been discarded</a>
+      and <a id="link-evolution" href="/evolution" target="_blank" rel="noopener">what the map has learned</a>
+      are both live.</p>
+  </section>
+
+  <!-- ================= per-source readout ================= -->
+  <section class="card">
+    <h2>Where the data has come from</h2>
+    <p class="fine">Three tiers land in one store through one contract, so a defect
+      in any one of them contaminates the shared corpus. The drop rate is the signal
+      worth watching: a tier discarding far more points is producing worse data.</p>
+    <div class="scroll"><table id="sources">
+      <thead><tr>
+        <th>Tier</th><th class="num">Points kept</th><th class="num">Dropped</th>
+        <th class="num">Drop rate</th><th class="num">Trips</th><th>Provenance</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <p class="fine" id="sources-note"></p>
+  </section>
+
+  <footer>
+    Vector collects nothing unless you ask it to, per tier, and the same privacy
+    gate applies to every tier — an upload is not more trusted for arriving as a
+    file.
+  </footer>
+</div>
+
+<script>
+// The token travels in the query string, as it does for the map: a browser cannot
+// put an Authorization header on a navigation. Every link out of this page carries
+// it forward, or the destination 401s and looks broken.
+const TOKEN = new URLSearchParams(location.search).get('token') || '';
+const AUTH = TOKEN ? { 'Authorization': 'Bearer ' + TOKEN } : {};
+if (TOKEN) {
+  for (const id of ['back', 'to-map', 'link-counters', 'link-evolution']) {
+    const el = document.getElementById(id);
+    if (el) el.href += (el.href.includes('?') ? '&' : '?') + 'token=' + encodeURIComponent(TOKEN);
+  }
+}
+
+const $ = (id) => document.getElementById(id);
+const fileInput = $('file');
+let pendingFile = null;
+
+function fmt(n) { return (n == null) ? '—' : Number(n).toLocaleString(); }
+function when(ms) {
+  if (!ms) return 'no timestamps';
+  const d = new Date(ms);
+  return d.toISOString().slice(0, 16).replace('T', ' ') + 'Z';
+}
+
+// Refusal reasons are shown as sentences, not as keys. A person who sees
+// `sparse_sampling` learns nothing they can act on.
+const REFUSALS = {
+  duplicate_trip: 'already imported',
+  age_too_old: 'older than a year',
+  sparse_sampling: 'sampled too rarely to place on a road',
+  no_timestamps: 'no times recorded',
+  too_short: 'too short to be a trip',
+  shorter_than_truncation: 'shorter than the 400 m that gets trimmed',
+};
+
+fileInput.addEventListener('change', () => {
+  pendingFile = fileInput.files && fileInput.files[0];
+  $('check').disabled = !pendingFile;
+  $('preview').classList.add('hidden');
+  $('result').classList.add('hidden');
+  if (pendingFile) {
+    $('file-note').textContent = pendingFile.name + ' — ' +
+      Math.round(pendingFile.size / 1024).toLocaleString() + ' KB. Nothing has left ' +
+      'your phone yet.';
+  }
+});
+
+$('check').addEventListener('click', async () => {
+  if (!pendingFile) return;
+  $('check').disabled = true;
+  $('check').textContent = 'Checking…';
+  try {
+    const plan = await send('/import/preview');
+    renderPreview(plan);
+  } catch (err) {
+    showResult('bad', err.message);
+  } finally {
+    $('check').disabled = false;
+    $('check').textContent = 'Check this file';
+  }
+});
+
+$('consent').addEventListener('change', () => {
+  $('commit').disabled = !$('consent').checked;
+});
+
+$('cancel').addEventListener('click', () => {
+  // Cancel means cancel: the preview goes away and nothing was stored, which is
+  // the whole point of having a dry run.
+  $('preview').classList.add('hidden');
+  $('consent').checked = false;
+  $('commit').disabled = true;
+});
+
+$('commit').addEventListener('click', async () => {
+  $('commit').disabled = true;
+  $('commit').textContent = 'Importing…';
+  try {
+    const done = await send('/import/commit?consent=granted');
+    $('preview').classList.add('hidden');
+    showResult('good',
+      'Imported ' + fmt(done.stored) + ' positions across ' + fmt(done.trips_stored) +
+      ' trip' + (done.trips_stored === 1 ? '' : 's') + '. They are in the quarantine ' +
+      'now and will be aggregated on the next cycle, then deleted within 72 hours.');
+    loadSources();
+  } catch (err) {
+    showResult('bad', err.message);
+  } finally {
+    $('commit').textContent = 'Import';
+    $('consent').checked = false;
+  }
+});
+
+async function send(path) {
+  const url = path + (path.includes('?') ? '&' : '?') +
+    'name=' + encodeURIComponent(pendingFile.name);
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { ...AUTH, 'Content-Type': 'application/octet-stream' },
+    body: pendingFile,
+  });
+  const body = await resp.json().catch(() => null);
+  if (!resp.ok) {
+    // The server's messages are written to be read by the person uploading —
+    // "export a shorter date range" rather than "413". Pass them through instead
+    // of replacing them with a status code.
+    throw new Error((body && (body.detail || body.error)) ||
+      ('Upload failed: HTTP ' + resp.status));
+  }
+  return body;
+}
+
+function renderPreview(plan) {
+  const keep = plan.trips_acceptable, drop = plan.trips_detected - keep;
+  $('preview-stat').innerHTML = [
+    ['trips found', fmt(plan.trips_detected)],
+    ['will import', fmt(keep)],
+    ['positions kept', fmt(plan.points_acceptable)],
+    ['in the file', fmt(plan.points_in_file)],
+  ].map(([label, value]) => `<div><b>${value}</b><span>${label}</span></div>`).join('');
+
+  const tbody = $('preview-table').querySelector('tbody');
+  tbody.innerHTML = plan.trips.map((t, i) => {
+    const status = t.refused
+      ? (REFUSALS[t.refused] || t.refused.replace(/_/g, ' '))
+      : 'will import';
+    return `<tr><td>${i + 1}</td><td>${when(t.first_ms)}</td>` +
+      `<td class="num">${fmt(t.points_in_file)}</td>` +
+      `<td class="num">${fmt(t.points_accepted)}</td>` +
+      `<td>${status}</td></tr>`;
+  }).join('');
+
+  // The gate's own numbers, stated before the import rather than after it. The
+  // 400 m per trip is not a defect to hide — it is the promise being kept.
+  const notes = [];
+  const d = plan.would_drop || {};
+  if (d.truncated_endpoint) notes.push(
+    ['', fmt(d.truncated_endpoint) + ' positions will be discarded because they are ' +
+     'within 200 m of a trip\'s start or end — that is the home-and-destination cut.']);
+  if (d.accuracy) notes.push(
+    ['', fmt(d.accuracy) + ' positions are less accurate than 25 m and will be dropped.']);
+  if (d.implausible_speed) notes.push(
+    ['warn', fmt(d.implausible_speed) + ' positions imply an impossible speed and will ' +
+     'be dropped as bad fixes.']);
+  if (d.age_too_old) notes.push(
+    ['warn', fmt(d.age_too_old) + ' positions are more than a year old and cannot be ' +
+     'used: the road may have changed since.']);
+  if (plan.trips_duplicate) notes.push(
+    ['warn', fmt(plan.trips_duplicate) + ' trip(s) in this file have already been ' +
+     'imported and will be skipped — uploading twice cannot double-count them, and ' +
+     'the skipped trips are not reported as lost data, because they are already here.']);
+  const unknown = (plan.quality || {}).accuracy_unknown;
+  if (unknown) notes.push(
+    ['', fmt(unknown) + ' positions carry no accuracy figure. That is normal for GPX ' +
+     'and is recorded as unknown — never guessed — and they are screened on movement ' +
+     'instead.']);
+  if (keep === 0) notes.push(
+    ['bad', 'Nothing in this file can be imported. Nothing will be stored.']);
+  $('preview-notes').innerHTML = notes
+    .map(([kind, text]) => `<p class="note ${kind}">${text}</p>`).join('');
+
+  $('consent-box').classList.toggle('hidden', keep === 0);
+  $('commit').textContent = keep ? 'Import ' + keep + ' trip' + (keep === 1 ? '' : 's') : 'Import';
+  $('commit').disabled = true;
+  $('consent').checked = false;
+  $('preview').classList.remove('hidden');
+  $('result').classList.add('hidden');
+}
+
+function showResult(kind, text) {
+  const el = $('result');
+  el.innerHTML = `<p class="note ${kind}">${text}</p>`;
+  el.classList.remove('hidden');
+}
+
+// Tier 2 capability check. Reporting the platform's actual answer rather than a
+// generic warning: on a browser without the wake lock there is no lever at all,
+// and the honest advice is to use tier 1.
+(function wakeLockNote() {
+  const el = $('wakelock-note');
+  if ('wakeLock' in navigator) {
+    el.className = 'note';
+    el.textContent = 'This browser can keep the screen awake while recording, ' +
+      'which is the only thing a web page can do about the background limit.';
+  } else {
+    el.className = 'note warn';
+    el.textContent = 'This browser cannot even keep the screen awake ' +
+      '(no Screen Wake Lock). Recording here will stop as soon as the screen ' +
+      'dims. Prefer Tier 1.';
+  }
+})();
+
+async function loadSources() {
+  try {
+    const resp = await fetch('/privacy-counters', { headers: AUTH });
+    const s = await resp.json();
+    const rows = Object.entries(s.by_source || {});
+    const tbody = $('sources').querySelector('tbody');
+    tbody.innerHTML = rows.map(([name, v]) => {
+      const rate = (v.drop_rate == null) ? '—' : (v.drop_rate * 100).toFixed(1) + '%';
+      return `<tr><td>${name}</td><td class="num">${fmt(v.points_stored)}</td>` +
+        `<td class="num">${fmt(v.dropped)}</td><td class="num">${rate}</td>` +
+        `<td class="num">${fmt(v.trips)}</td><td class="fine">${v.provenance}</td></tr>`;
+    }).join('');
+    // "declared" is not a hedge, it is the accurate word: the server can prove an
+    // import (it parsed the file) but cannot tell a native app from a browser
+    // without being told (ADR-0070 §5). Saying so here stops a debugging aid from
+    // being read later as a verified fact.
+    $('sources-note').textContent = s.total_dropped
+      ? 'import is derived by the server; live and native are declared by the client ' +
+        'and shown as declared — provenance is for debugging and rollback, not trust.'
+      : 'The gate has discarded nothing yet, which on real data would mean it is not ' +
+        'wired in. Real drives always contain bad fixes.';
+  } catch {
+    $('sources-note').textContent = 'Could not read the counters.';
+  }
+}
+loadSources();
+</script>
+</body>
+</html>

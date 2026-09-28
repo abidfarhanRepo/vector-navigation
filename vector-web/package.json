@@ -1,0 +1,13 @@
+{
+  "name": "vector-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Vector — web composition root: MapLibre viewer + proxy to routing/traffic (Wave 26e)",
+  "scripts": {
+    "validate": "python -m compileall -q src || python3 -m compileall -q src",
+    "test": "python run_tests.py || python3 run_tests.py"
+  },
+  "devDependencies": {
+    "playwright": "^1.57.0"
+  }
+}

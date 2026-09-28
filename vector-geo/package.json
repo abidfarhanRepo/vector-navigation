@@ -1,0 +1,14 @@
+{
+  "name": "vector-geo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vector — vector-geo (shared Python geospatial domain models)",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "python3 -m unittest discover -s tests"
+  },
+  "devDependencies": {
+    "yaml": "^1.10.0"
+  }
+}

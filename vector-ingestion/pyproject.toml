@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vector_ingestion"
+version = "0.1.0"
+description = "Vector — vector-ingestion"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+vector-ingestion-health = "vector_ingestion.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vector_ingestion"]

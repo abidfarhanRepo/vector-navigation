@@ -1,0 +1,14 @@
+{
+  "name": "vector-map-store",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vector — vector-map-store",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "yaml": "^1.10.0"
+  }
+}

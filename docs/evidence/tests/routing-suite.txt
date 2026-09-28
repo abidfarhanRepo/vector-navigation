@@ -1,0 +1,22 @@
+vector-routing test suite — 625 tests, 0 failures
+Run 2026-09-24. Tail of the run:
+
+Ran 625 tests in 110.857s
+
+OK (skipped=1)
+
+The same run also printed its service smoke line, which is where the
+`sample_distance_m` figure in the README comes from:
+
+{'status': 'ok', 'service': 'vector-routing', 'nodes': 9, 'edges': 24, 'sample_distance_m': 444.8, 'sample_duration_s': 42.7, 'sample_waypoints': 5}
+
+Reproduce:
+  cd vector-routing && PYTHONPATH="$PWD/src:$PWD/vendor" python3 -m unittest discover -s tests
+
+Provenance:
+  * Count and result are as the suite reported on 2026-09-24; this is a
+    summary, not the full log (the run also emits expected warnings about
+    unreadable barrier/camera/signal catalogs and a ResourceWarning from
+    unittest's HTTP mocks).
+  * The same count was recorded on 2026-09-20, so this suite's record is
+    unchanged by the releases in between.

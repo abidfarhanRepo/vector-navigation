@@ -1,0 +1,10 @@
+{
+  "name": "vector-bus-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Vector — shared event-bus client (LocalBus + NetworkBusClient) for Python engines",
+  "scripts": {
+    "validate": "python3 -m py_compile src/vector_bus_client/*.py",
+    "test": "PYTHONPATH=src python3 -m unittest discover -s tests"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vector.dev/schemas/logistics-result.schema.json",
+  "title": "LogisticsResult",
+  "description": "payload.kind == 'logistics_result'. Notification payload from multi-stop logistics routing (ADR-0043). Published on #events, correlated by correlation_id.",
+  "type": "object",
+  "required": ["kind", "ok"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "logistics_result" },
+    "ok": { "type": "boolean" },
+    "geojson": {
+      "description": "GeoJSON FeatureCollection for the computed route, or null when unavailable.",
+      "type": ["object", "null"]
+    },
+    "order": {
+      "description": "Optimized visiting order. Single-vehicle: flat array of stop indices (e.g. [0,2,1,3]). Multi-vehicle (VRP-lite): a list of one array per vehicle (e.g. [[0,2,1],[3,4]]). null when unavailable.",
+      "type": ["array", "null"],
+      "items": {
+        "oneOf": [
+          { "type": "integer" },
+          { "type": "array", "items": { "type": "integer" } }
+        ]
+      }
+    },
+    "total_distance_km": {
+      "description": "Total route distance in kilometers, or null.",
+      "type": ["number", "null"]
+    },
+    "total_duration_min": {
+      "description": "Total route duration in minutes, or null.",
+      "type": ["number", "null"]
+    },
+    "error": {
+      "description": "Error message when ok is false, else null.",
+      "type": ["string", "null"]
+    },
+    "routes": {
+      "description": "Per-vehicle routes for multi-vehicle VRP-lite results.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "vehicle": { "type": "integer" },
+          "depot": {
+            "type": "array",
+            "description": "Depot [lat, lon] this vehicle started from.",
+            "items": { "type": "number" },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "stops": {
+            "type": "array",
+            "description": "Visited stops as [lat, lon] pairs in visiting order.",
+            "items": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "order": { "type": "array", "items": { "type": "integer" } },
+          "distance_km": { "type": "number" },
+          "duration_min": { "type": "number" },
+          "arrivals": {
+            "type": ["array", "null"],
+            "description": "Per-stop arrival epoch seconds, parallel to order (null at depot sentinel).",
+            "items": { "type": ["number", "null"] }
+          },
+          "violations": {
+            "type": "integer",
+            "description": "Number of stops on this route that missed their time window.",
+            "minimum": 0
+          },
+          "geojson": {
+            "description": "GeoJSON FeatureCollection for this vehicle's route.",
+            "type": "object"
+          }
+        },
+        "required": ["vehicle", "order", "distance_km", "duration_min"],
+        "additionalProperties": true
+      }
+    },
+    "vehicles": {
+      "description": "Number of vehicles in the multi-vehicle solution.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "window_violations": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total time-window violations across all vehicles."
+    },
+    "start_time": {
+      "type": "number",
+      "description": "Echoed depot departure time in seconds."
+    }
+  }
+}

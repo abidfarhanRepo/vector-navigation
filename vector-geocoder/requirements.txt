@@ -1,0 +1,1 @@
+# vector-geocoder runtime deps (none beyond stdlib for the index/serve path)

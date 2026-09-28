@@ -1,0 +1,22 @@
+Vector
+Copyright (c) 2026 Abid Farhan Mohammed
+
+This product is licensed under the MIT License (see LICENSE).
+
+That licence covers Vector's own source code. It does NOT cover, and cannot
+relicense, the map data Vector consumes or derives:
+
+  * OpenStreetMap data is (c) OpenStreetMap contributors, licensed under the
+    Open Database License (ODbL).
+    https://www.openstreetmap.org/copyright
+
+  * Place data from the Overture Maps Foundation is licensed under that
+    project's terms.
+    https://overturemaps.org/
+
+Tiles, routing graphs and search indexes produced by this software from
+OpenStreetMap input are Derivative Databases under ODbL. If you redistribute
+them, you inherit ODbL's attribution and share-alike obligations.
+
+See docs/ATTRIBUTION.md for the full attribution and third-party dependency
+licence list.

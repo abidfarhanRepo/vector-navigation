@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><title>glyph test</title>
+<link href="vendor/maplibre-gl.css" rel="stylesheet">
+<script src="vendor/maplibre-gl.js"></script>
+<div id="map" style="width:390px;height:844px"></div>
+<script>
+const map = new maplibregl.Map({
+  container:'map',
+  style:{
+    version:8,
+    glyphs:'/glyphs/{fontstack}/{range}.pbf',
+    sources:{ v:{ type:'geojson', data:{ type:'FeatureCollection', features:[
+      { type:'Feature', properties:{n:'TEST'}, geometry:{ type:'Point', coordinates:[51.53,25.29] } }
+    ]}},
+    layers:[
+      { id:'bg', type:'background', paint:{ 'background-color':'#0c0e14' } },
+      { id:'lbl', type:'symbol', source:'v',
+        layout:{ 'text-field':['get','n'],'text-font':['Open Sans Regular'],'text-size':22 },
+        paint:{ 'text-color':'#ff0','text-halo-color':'#000','text-halo-width':1 } }
+    ]
+  },
+  center:[51.53,25.29], zoom:14
+});
+window.map=map;
+map.on('error', e=>{ window.__err=(e&&e.error&&e.error.message)||String(e); });
+</script>

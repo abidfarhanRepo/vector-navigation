@@ -1,0 +1,14 @@
+{
+  "name": "vector-governance",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vector — vector-governance",
+  "scripts": {
+    "validate": "node scripts/validate.mjs && node scripts/validate-registry-kg.mjs",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "yaml": "^1.10.0"
+  }
+}
